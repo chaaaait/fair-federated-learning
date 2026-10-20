@@ -1,0 +1,325 @@
+% =====================================================================================
+% refs.bib — T16 / P20. Verification status for every entry: docs/REFERENCES.md
+% Group S = the 30 surveyed papers (Review 1). Group A = added for methods, datasets,
+% tools and recent related work (17 Oct 2026). DOIs are included only where verified
+% or certain; entries without a DOI are cited by venue (IEEE style allows this).
+% =====================================================================================
+
+% ---------------------------------------------------------------- S: personalised FL
+@article{li2020federated,
+  author  = {Li, Tian and Sahu, Anit Kumar and Talwalkar, Ameet and Smith, Virginia},
+  title   = {Federated Learning: Challenges, Methods, and Future Directions},
+  journal = {IEEE Signal Processing Magazine},
+  volume  = {37}, number = {3}, pages = {50--60}, year = {2020},
+  doi     = {10.1109/MSP.2020.2975749}
+}
+@inproceedings{fallah2020personalized,
+  author    = {Fallah, Alireza and Mokhtari, Aryan and Ozdaglar, Asuman},
+  title     = {Personalized Federated Learning with Theoretical Guarantees: A Model-Agnostic Meta-Learning Approach},
+  booktitle = {Advances in Neural Information Processing Systems},
+  volume    = {33}, pages = {3557--3568}, year = {2020}
+}
+@inproceedings{dinh2020personalized,
+  author    = {Dinh, Canh T. and Tran, Nguyen H. and Nguyen, Tuan Dung},
+  title     = {Personalized Federated Learning with {Moreau} Envelopes},
+  booktitle = {Advances in Neural Information Processing Systems},
+  volume    = {33}, pages = {21394--21405}, year = {2020}
+}
+@inproceedings{li2021ditto,
+  author    = {Li, Tian and Hu, Shengyuan and Beirami, Ahmad and Smith, Virginia},
+  title     = {Ditto: Fair and Robust Federated Learning Through Personalization},
+  booktitle = {Proc. 38th Int. Conf. Machine Learning (ICML)},
+  series    = {PMLR}, volume = {139}, pages = {6357--6368}, year = {2021}
+}
+@inproceedings{huang2021personalized,
+  author    = {Huang, Yutao and Chu, Lingyang and Zhou, Zirui and Wang, Lanjun and Liu, Jiangchuan and Pei, Jian and Zhang, Yong},
+  title     = {Personalized Cross-Silo Federated Learning on Non-{IID} Data},
+  booktitle = {Proc. AAAI Conf. Artificial Intelligence},
+  volume    = {35}, number = {9}, pages = {7865--7873}, year = {2021},
+  doi       = {10.1609/aaai.v35i9.16960}
+}
+@article{tan2023towards,
+  author  = {Tan, Alysa Ziying and Yu, Han and Cui, Lizhen and Yang, Qiang},
+  title   = {Towards Personalized Federated Learning},
+  journal = {IEEE Transactions on Neural Networks and Learning Systems},
+  volume  = {34}, number = {12}, pages = {9587--9603}, year = {2023},
+  doi     = {10.1109/TNNLS.2022.3160699}
+}
+
+% ---------------------------------------------------------------- S: fairness in FL
+@inproceedings{mohri2019agnostic,
+  author    = {Mohri, Mehryar and Sivek, Gary and Suresh, Ananda Theertha},
+  title     = {Agnostic Federated Learning},
+  booktitle = {Proc. 36th Int. Conf. Machine Learning (ICML)},
+  series    = {PMLR}, volume = {97}, pages = {4615--4625}, year = {2019}
+}
+@inproceedings{li2020fair,
+  author    = {Li, Tian and Sanjabi, Maziar and Beirami, Ahmad and Smith, Virginia},
+  title     = {Fair Resource Allocation in Federated Learning},
+  booktitle = {Proc. Int. Conf. Learning Representations (ICLR)},
+  year      = {2020}
+}
+@article{duan2021self,
+  author  = {Duan, Moming and Liu, Duo and Chen, Xianzhang and Liu, Renping and Tan, Yujuan and Liang, Liang},
+  title   = {Self-Balancing Federated Learning With Global Imbalanced Data in Mobile Systems},
+  journal = {IEEE Transactions on Parallel and Distributed Systems},
+  volume  = {32}, number = {1}, pages = {59--71}, year = {2021},
+  doi     = {10.1109/TPDS.2020.3009406}
+}
+@inproceedings{du2021fairness,
+  author    = {Du, Wei and Xu, Depeng and Wu, Xintao and Tong, Hanghang},
+  title     = {Fairness-aware Agnostic Federated Learning},
+  booktitle = {Proc. SIAM Int. Conf. Data Mining (SDM)},
+  pages     = {181--189}, year = {2021},
+  doi       = {10.1137/1.9781611976700.21}
+}
+@inproceedings{ezzeldin2023fairfed,
+  author    = {Ezzeldin, Yahya H. and Yan, Shen and He, Chaoyang and Ferrara, Emilio and Avestimehr, Salman},
+  title     = {{FairFed}: Enabling Group Fairness in Federated Learning},
+  booktitle = {Proc. AAAI Conf. Artificial Intelligence},
+  volume    = {37}, number = {6}, pages = {7494--7502}, year = {2023},
+  doi       = {10.1609/aaai.v37i6.25911}
+}
+@article{shi2024towards,
+  author  = {Shi, Yuxin and Yu, Han and Leung, Cyril},
+  title   = {Towards Fairness-Aware Federated Learning},
+  journal = {IEEE Transactions on Neural Networks and Learning Systems},
+  volume  = {35}, number = {9}, pages = {11922--11938}, year = {2024},
+  doi     = {10.1109/TNNLS.2023.3263594}
+}
+@article{rafi2024fairness,
+  author  = {Rafi, Taki Hasan and Noor, Faiza Anan and Hussain, Tahmid and Chae, Dong-Kyu},
+  title   = {Fairness and Privacy Preserving in Federated Learning: A Survey},
+  journal = {Information Fusion},
+  volume  = {105}, pages = {102198}, year = {2024},
+  doi     = {10.1016/j.inffus.2023.102198}
+}
+
+% ---------------------------------------------------------------- S: privacy / DP in FL
+@inproceedings{dwork2006calibrating,
+  author    = {Dwork, Cynthia and McSherry, Frank and Nissim, Kobbi and Smith, Adam},
+  title     = {Calibrating Noise to Sensitivity in Private Data Analysis},
+  booktitle = {Proc. Theory of Cryptography Conf. (TCC)},
+  series    = {LNCS}, volume = {3876}, pages = {265--284}, year = {2006},
+  doi       = {10.1007/11681878_14}
+}
+@inproceedings{abadi2016deep,
+  author    = {Abadi, Martin and Chu, Andy and Goodfellow, Ian and McMahan, H. Brendan and Mironov, Ilya and Talwar, Kunal and Zhang, Li},
+  title     = {Deep Learning with Differential Privacy},
+  booktitle = {Proc. ACM SIGSAC Conf. Computer and Communications Security (CCS)},
+  pages     = {308--318}, year = {2016},
+  doi       = {10.1145/2976749.2978318}
+}
+@article{hu2020personalized,
+  author  = {Hu, Rui and Guo, Yuanxiong and Li, Hongning and Pei, Qingqi and Gong, Yanmin},
+  title   = {Personalized Federated Learning With Differential Privacy},
+  journal = {IEEE Internet of Things Journal},
+  volume  = {7}, number = {10}, pages = {9530--9539}, year = {2020},
+  doi     = {10.1109/JIOT.2020.2991416}
+}
+@article{wei2020federated,
+  author  = {Wei, Kang and Li, Jun and Ding, Ming and Ma, Chuan and Yang, Howard H. and Farokhi, Farhad and Jin, Shi and Quek, Tony Q. S. and Poor, H. Vincent},
+  title   = {Federated Learning With Differential Privacy: Algorithms and Performance Analysis},
+  journal = {IEEE Transactions on Information Forensics and Security},
+  volume  = {15}, pages = {3454--3469}, year = {2020},
+  doi     = {10.1109/TIFS.2020.2988575}
+}
+@inproceedings{kim2021federated,
+  author    = {Kim, Muah and G{\"u}nl{\"u}, Onur and Schaefer, Rafael F.},
+  title     = {Federated Learning with Local Differential Privacy: Trade-Offs Between Privacy, Utility, and Communication},
+  booktitle = {Proc. IEEE Int. Conf. Acoustics, Speech and Signal Processing (ICASSP)},
+  pages     = {2650--2654}, year = {2021},
+  doi       = {10.1109/ICASSP39728.2021.9413764}
+}
+@inproceedings{bagdasaryan2019differential,
+  author    = {Bagdasaryan, Eugene and Poursaeed, Omid and Shmatikov, Vitaly},
+  title     = {Differential Privacy Has Disparate Impact on Model Accuracy},
+  booktitle = {Advances in Neural Information Processing Systems},
+  volume    = {32}, pages = {15479--15488}, year = {2019}
+}
+@inproceedings{bietti2022personalization,
+  author    = {Bietti, Alberto and Wei, Chen-Yu and Dud{\'i}k, Miroslav and Langford, John and Wu, Zhiwei Steven},
+  title     = {Personalization Improves Privacy-Accuracy Tradeoffs in Federated Learning},
+  booktitle = {Proc. 39th Int. Conf. Machine Learning (ICML)},
+  series    = {PMLR}, volume = {162}, pages = {1945--1962}, year = {2022}
+}
+
+% ---------------------------------------------------------------- S: privacy-fairness trade-off
+@article{chen2023privacy,
+  author  = {Chen, Huiqiang and Zhu, Tianqing and Zhang, Tao and Zhou, Wanlei and Yu, Philip S.},
+  title   = {Privacy and Fairness in Federated Learning: On the Perspective of Tradeoff},
+  journal = {ACM Computing Surveys},
+  volume  = {56}, number = {2}, pages = {1--37}, year = {2023},
+  doi     = {10.1145/3606017}
+}
+@inproceedings{padala2021federated,
+  author    = {Padala, Manisha and Damle, Sankarshan and Gujar, Sujit},
+  title     = {Federated Learning Meets Fairness and Differential Privacy},
+  booktitle = {Proc. Int. Conf. Neural Information Processing (ICONIP)},
+  series    = {CCIS}, volume = {1517}, pages = {692--699}, year = {2021}
+}
+@inproceedings{corbucci2024puffle,
+  author    = {Corbucci, Luca and Heikkil{\"a}, Mikko A. and Solans Noguero, David and Monreale, Anna and Kourtellis, Nicolas},
+  title     = {{PUFFLE}: Balancing Privacy, Utility, and Fairness in Federated Learning},
+  booktitle = {Proc. 27th European Conf. Artificial Intelligence (ECAI)},
+  pages     = {4462--4469}, year = {2024}
+}
+@inproceedings{esipova2023disparate,
+  author    = {Esipova, Maria S. and Ghomi, Atiyeh Ashari and Luo, Yaqiao and Cresswell, Jesse C.},
+  title     = {Disparate Impact in Differential Privacy from Gradient Misalignment},
+  booktitle = {Proc. Int. Conf. Learning Representations (ICLR)},
+  year      = {2023}
+}
+@article{zhao2025convergence,
+  author  = {Zhao, Xiyu and Cui, Qimei and Li, Weicai and Ni, Wei and Hossain, Ekram and Sheng, Quan Z. and Tao, Xiaofeng and Zhang, Ping},
+  title   = {Convergence-Privacy-Fairness Trade-Off in Personalized Federated Learning},
+  journal = {IEEE Transactions on Machine Learning in Communications and Networking},
+  year    = {2025},
+  doi     = {10.1109/TMLCN.2025.3528901}
+}
+@article{khan2026fedgraph,
+  author  = {Khan, Koffka},
+  title   = {{FedGraph-Fair}: Federated Learning with Personalization and Fairness via Dynamic Graphs and Distributionally Robust Optimization},
+  journal = {Information Sciences},
+  volume  = {728}, pages = {122710}, year = {2026}
+}
+
+% ---------------------------------------------------------------- S: attacks, leakage, surveys
+@inproceedings{shokri2017membership,
+  author    = {Shokri, Reza and Stronati, Marco and Song, Congzheng and Shmatikov, Vitaly},
+  title     = {Membership Inference Attacks Against Machine Learning Models},
+  booktitle = {Proc. IEEE Symp. Security and Privacy (SP)},
+  pages     = {3--18}, year = {2017},
+  doi       = {10.1109/SP.2017.41}
+}
+@inproceedings{zhu2019deep,
+  author    = {Zhu, Ligeng and Liu, Zhijian and Han, Song},
+  title     = {Deep Leakage from Gradients},
+  booktitle = {Advances in Neural Information Processing Systems},
+  volume    = {32}, pages = {14774--14784}, year = {2019}
+}
+@inproceedings{nasr2019comprehensive,
+  author    = {Nasr, Milad and Shokri, Reza and Houmansadr, Amir},
+  title     = {Comprehensive Privacy Analysis of Deep Learning: Passive and Active White-box Inference Attacks against Centralized and Federated Learning},
+  booktitle = {Proc. IEEE Symp. Security and Privacy (SP)},
+  pages     = {739--753}, year = {2019},
+  doi       = {10.1109/SP.2019.00065}
+}
+@article{yin2021comprehensive,
+  author  = {Yin, Xuefei and Zhu, Yanming and Hu, Jiankun},
+  title   = {A Comprehensive Survey of Privacy-preserving Federated Learning: A Taxonomy, Review, and Future Directions},
+  journal = {ACM Computing Surveys},
+  volume  = {54}, number = {6}, pages = {1--36}, year = {2021},
+  doi     = {10.1145/3460427}
+}
+
+% ================================================================ A: added 17 Oct 2026
+@inproceedings{mcmahan2017communication,
+  author    = {McMahan, H. Brendan and Moore, Eider and Ramage, Daniel and Hampson, Seth and Ag{\"u}era y Arcas, Blaise},
+  title     = {Communication-Efficient Learning of Deep Networks from Decentralized Data},
+  booktitle = {Proc. 20th Int. Conf. Artificial Intelligence and Statistics (AISTATS)},
+  series    = {PMLR}, volume = {54}, pages = {1273--1282}, year = {2017}
+}
+@misc{arivazhagan2019federated,
+  author       = {Arivazhagan, Manoj Ghuhan and Aggarwal, Vinay and Singh, Aaditya Kumar and Choudhary, Sunav},
+  title        = {Federated Learning with Personalization Layers},
+  howpublished = {arXiv:1912.00818},
+  year         = {2019}
+}
+@article{ghosh2022efficient,
+  author  = {Ghosh, Avishek and Chung, Jichan and Yin, Dong and Ramchandran, Kannan},
+  title   = {An Efficient Framework for Clustered Federated Learning},
+  journal = {IEEE Transactions on Information Theory},
+  volume  = {68}, number = {12}, pages = {8076--8091}, year = {2022},
+  doi     = {10.1109/TIT.2022.3192506}
+}
+@inproceedings{collins2021exploiting,
+  author    = {Collins, Liam and Hassani, Hamed and Mokhtari, Aryan and Shakkottai, Sanjay},
+  title     = {Exploiting Shared Representations for Personalized Federated Learning},
+  booktitle = {Proc. 38th Int. Conf. Machine Learning (ICML)},
+  series    = {PMLR}, volume = {139}, year = {2021}
+}
+@techreport{krizhevsky2009learning,
+  author      = {Krizhevsky, Alex},
+  title       = {Learning Multiple Layers of Features from Tiny Images},
+  institution = {University of Toronto},
+  year        = {2009}
+}
+@misc{becker1996adult,
+  author       = {Becker, Barry and Kohavi, Ronny},
+  title        = {Adult},
+  howpublished = {UCI Machine Learning Repository},
+  year         = {1996},
+  doi          = {10.24432/C5XW20}
+}
+@inproceedings{ding2021retiring,
+  author    = {Ding, Frances and Hardt, Moritz and Miller, John and Schmidt, Ludwig},
+  title     = {Retiring Adult: New Datasets for Fair Machine Learning},
+  booktitle = {Advances in Neural Information Processing Systems},
+  volume    = {34}, year = {2021}
+}
+@inproceedings{li2022federated,
+  author    = {Li, Qinbin and Diao, Yiqun and Chen, Quan and He, Bingsheng},
+  title     = {Federated Learning on Non-{IID} Data Silos: An Experimental Study},
+  booktitle = {Proc. IEEE 38th Int. Conf. Data Engineering (ICDE)},
+  pages     = {965--978}, year = {2022}
+}
+@misc{yousefpour2021opacus,
+  author       = {Yousefpour, Ashkan and Shilov, Igor and Sablayrolles, Alexandre and Testuggine, Davide and Prasad, Karthik and Malek, Mani and Nguyen, John and Ghosh, Sayan and Bharadwaj, Akash and Zhao, Jessica and Cormode, Graham and Mironov, Ilya},
+  title        = {Opacus: User-Friendly Differential Privacy Library in {PyTorch}},
+  howpublished = {arXiv:2109.12298},
+  year         = {2021}
+}
+@misc{beutel2020flower,
+  author       = {Beutel, Daniel J. and Topal, Taner and Mathur, Akhil and Qiu, Xinchi and Fernandez-Marques, Javier and Gao, Yan and Sani, Lorenzo and Li, Kwing Hei and Parcollet, Titouan and de Gusm{\~a}o, Pedro Porto Buarque and Lane, Nicholas D.},
+  title        = {Flower: A Friendly Federated Learning Research Framework},
+  howpublished = {arXiv:2007.14390},
+  year         = {2020}
+}
+@inproceedings{mironov2017renyi,
+  author    = {Mironov, Ilya},
+  title     = {R{\'e}nyi Differential Privacy},
+  booktitle = {Proc. IEEE 30th Computer Security Foundations Symp. (CSF)},
+  pages     = {263--275}, year = {2017},
+  doi       = {10.1109/CSF.2017.11}
+}
+@inproceedings{yeom2018privacy,
+  author    = {Yeom, Samuel and Giacomelli, Irene and Fredrikson, Matt and Jha, Somesh},
+  title     = {Privacy Risk in Machine Learning: Analyzing the Connection to Overfitting},
+  booktitle = {Proc. IEEE 31st Computer Security Foundations Symp. (CSF)},
+  pages     = {268--282}, year = {2018},
+  doi       = {10.1109/CSF.2018.00027}
+}
+@inproceedings{carlini2022membership,
+  author    = {Carlini, Nicholas and Chien, Steve and Nasr, Milad and Song, Shuang and Terzis, Andreas and Tram{\`e}r, Florian},
+  title     = {Membership Inference Attacks From First Principles},
+  booktitle = {Proc. IEEE Symp. Security and Privacy (SP)},
+  pages     = {1897--1914}, year = {2022},
+  doi       = {10.1109/SP46214.2022.9833649}
+}
+@techreport{jain1984quantitative,
+  author      = {Jain, Raj and Chiu, Dah-Ming and Hawe, William R.},
+  title       = {A Quantitative Measure of Fairness and Discrimination for Resource Allocation in Shared Computer Systems},
+  institution = {Digital Equipment Corporation},
+  number      = {DEC-TR-301},
+  year        = {1984}
+}
+@inproceedings{noble2022differentially,
+  author    = {Noble, Maxence and Bellet, Aur{\'e}lien and Dieuleveut, Aymeric},
+  title     = {Differentially Private Federated Learning on Heterogeneous Data},
+  booktitle = {Proc. 25th Int. Conf. Artificial Intelligence and Statistics (AISTATS)},
+  series    = {PMLR}, volume = {151}, pages = {10110--10145}, year = {2022}
+}
+@inproceedings{tramer2021differentially,
+  author    = {Tram{\`e}r, Florian and Boneh, Dan},
+  title     = {Differentially Private Learning Needs Better Features (or Much More Data)},
+  booktitle = {Proc. Int. Conf. Learning Representations (ICLR)},
+  year      = {2021}
+}
+@article{kairouz2021advances,
+  author  = {Kairouz, Peter and McMahan, H. Brendan and others},
+  title   = {Advances and Open Problems in Federated Learning},
+  journal = {Foundations and Trends in Machine Learning},
+  volume  = {14}, number = {1--2}, pages = {1--210}, year = {2021},
+  doi     = {10.1561/2200000083}
+}

@@ -1,0 +1,15 @@
+# Makes the `pfl` library importable everywhere (needed by the Flower demo's subprocesses):
+#   .venv\Scripts\python -m pip install -e .
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pfl"
+version = "1.0.0"
+description = "Personalisation mechanisms under differential privacy (T16 / P20)"
+requires-python = ">=3.10"
+license = "MIT"
+
+[tool.setuptools]
+packages = ["pfl"]

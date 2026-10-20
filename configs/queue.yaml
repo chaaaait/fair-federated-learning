@@ -1,0 +1,66 @@
+# Experiment queue (PLAN §4). The sweep runs blocks top to bottom, skips finished runs,
+# and re-reads this file before every run: edit eps0 (Gate 2) and later runs pick it up.
+# Run IDs do not include the block, so a configuration shared by two blocks runs once.
+
+eps0: 2.0                # Gate 2: confirm after Q1+Q2 (DP-FedAvg still learns but loses >= 5 points)
+seeds: [0, 1, 2]
+
+blocks:
+  - name: Q1             # M1 privacy sweep (FedAvg + fine-tuning from one run)
+    dataset: cifar10
+    eps: [inf, 8, 4, 2, 1, 0.5, 0.3]
+    runs:
+      - {method: fedavg}
+
+  - name: Q2             # non-private ceilings for the other mechanisms
+    dataset: cifar10
+    eps: [inf]
+    runs:
+      - {method: local}
+      - {method: perfedavg}
+      - {method: ifca}
+      - {method: fedper}
+
+  - name: Q3             # M2 core: all mechanisms at the common budget eps0
+    dataset: cifar10
+    eps: [eps0]
+    runs:
+      - {method: local}
+      - {method: perfedavg}
+      - {method: ifca}
+      - {method: fedper}
+
+  - name: Q4             # M3: q-FFL on the global model (q = 0 is plain FedAvg from Q1)
+    dataset: cifar10
+    eps: [eps0, inf]
+    runs:
+      - {method: fedavg, aggregation: qffl, qffl_q: 1}
+      - {method: fedavg, aggregation: qffl, qffl_q: 5}
+
+  - name: Q5             # Adult: group fairness (DP / EO gaps by sex)
+    dataset: adult
+    eps: [inf, eps0]
+    runs:
+      - {method: fedavg}
+      - {method: local}
+      - {method: perfedavg}
+      - {method: ifca}
+      - {method: fedper}
+
+  - name: Q6             # M2 full sweep
+    dataset: cifar10
+    eps: [8, 4, 1, 0.5]
+    runs:
+      - {method: local}
+      - {method: perfedavg}
+      - {method: ifca}
+      - {method: fedper}
+
+  - name: Q7             # extras: q-FFL + best mechanism (default FedPer; change after Q3), heterogeneity check
+    dataset: cifar10
+    eps: [eps0]
+    runs:
+      - {method: fedper, aggregation: qffl, qffl_q: 1}
+      - {method: fedper, aggregation: qffl, qffl_q: 5}
+      - {method: fedavg, dirichlet_alpha: 1.0}
+      - {method: fedper, dirichlet_alpha: 1.0}

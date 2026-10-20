@@ -1,0 +1,92 @@
+{
+ "versions": {
+  "python": "3.12.10",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "torch": "2.11.0+cu128",
+  "cuda_available": true,
+  "cuda_version": "12.8",
+  "numpy": "2.5.2",
+  "opacus": "1.6.0",
+  "flwr": "1.41.0",
+  "gpu": "NVIDIA GeForce GTX 1650"
+ },
+ "checks": {
+  "gpu": {
+   "ok": true,
+   "detail": "device=cuda gpu=NVIDIA GeForce GTX 1650 arch_list=['sm_75', 'sm_80', 'sm_86', 'sm_90', 'sm_100', 'sm_120']"
+  },
+  "gpu_arch_supported": {
+   "ok": true,
+   "detail": "capability sm_75"
+  },
+  "data": {
+   "ok": true,
+   "detail": "12 clients, train sizes min 683 / median 3366 / max 4214 (1s)"
+  },
+  "backends_agree": {
+   "ok": true,
+   "detail": "max |opacus - functorch| = 0.00e+00"
+  },
+  "run_fedavg": {
+   "ok": true,
+   "detail": "0.7s/round -> ~0.4 min for 30 rounds, eps 2.000, peak GPU 35.04638671875 MB"
+  },
+  "accountant_fedavg": {
+   "ok": true,
+   "detail": "spent 1.9998 vs target 2.0"
+  },
+  "run_fedavg-qffl": {
+   "ok": true,
+   "detail": "0.6s/round -> ~0.4 min for 30 rounds, eps 2.000, peak GPU 34.96484375 MB"
+  },
+  "accountant_fedavg-qffl": {
+   "ok": true,
+   "detail": "spent 1.9998 vs target 2.0"
+  },
+  "run_local": {
+   "ok": true,
+   "detail": "0.6s/round -> ~0.3 min for 30 rounds, eps 2.000, peak GPU 35.13232421875 MB"
+  },
+  "accountant_local": {
+   "ok": true,
+   "detail": "spent 1.9998 vs target 2.0"
+  },
+  "run_perfedavg": {
+   "ok": true,
+   "detail": "0.7s/round -> ~0.4 min for 30 rounds, eps 2.000, peak GPU 35.0146484375 MB"
+  },
+  "accountant_perfedavg": {
+   "ok": true,
+   "detail": "spent 1.9999 vs target 2.0"
+  },
+  "run_ifca": {
+   "ok": true,
+   "detail": "0.7s/round -> ~0.4 min for 30 rounds, eps 2.000, peak GPU 35.01318359375 MB"
+  },
+  "accountant_ifca": {
+   "ok": true,
+   "detail": "spent 1.9999 vs target 2.0"
+  },
+  "run_fedper": {
+   "ok": true,
+   "detail": "0.6s/round -> ~0.3 min for 30 rounds, eps 2.000, peak GPU 34.98583984375 MB"
+  },
+  "accountant_fedper": {
+   "ok": true,
+   "detail": "spent 1.9998 vs target 2.0"
+  },
+  "time_budget": {
+   "ok": true,
+   "detail": "slowest method ~0.4 min per run (target <= 6; if over, lower rounds in configs/base.yaml)"
+  }
+ },
+ "timings_s_per_round": {
+  "fedavg": 0.6502454499968735,
+  "fedavg-qffl": 0.6390572000018437,
+  "local": 0.6242236499965657,
+  "perfedavg": 0.7019338000027346,
+  "ifca": 0.6611327499995241,
+  "fedper": 0.5987609500043618
+ },
+ "all_ok": true
+}

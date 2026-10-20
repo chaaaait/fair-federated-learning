@@ -1,0 +1,13 @@
+# Install PyTorch with CUDA FIRST (GTX 1650 = sm_75), e.g.
+#   .venv\Scripts\python -m pip install torch torchvision --index-url https://download.pytorch.org/whl/cu128
+# then:
+#   .venv\Scripts\python -m pip install -r requirements.txt
+# Exact versions used for the paper are pinned in requirements-lock.txt (pip freeze after setup).
+opacus>=1.5
+flwr>=1.40
+numpy
+scipy
+pandas
+scikit-learn
+matplotlib
+pyyaml

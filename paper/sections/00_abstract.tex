@@ -1,0 +1,20 @@
+\begin{abstract}
+Federated learning lets many clients train one model without pooling their data, yet the updates they share can
+still expose individual records, so deployments add differential privacy (DP). DP does not cost every client the
+same: clients whose data the model fits poorly lose the most accuracy, which turns a privacy guarantee into a
+fairness problem. Personalised federated learning is known to soften this cost, but its main mechanisms---local
+fine-tuning, meta-learning, client clustering and parameter decoupling---have been tested in separate studies,
+against different baselines and mostly without DP. We compare one representative of each family under a single
+record-level privacy budget. Every client trains with per-example DP-SGD and answers the same private queries, and
+the noise of each run is calibrated so that all mechanisms spend exactly the same $(\eps,\delta)$, including the
+cost of the loss reports needed by clustering and by the q-FFL fairness objective. On CIFAR-10 split over 20
+clients with a Dirichlet label partition, we sweep $\eps$ from 0.3 to 8 and measure mean and worst-10\% client
+accuracy, Jain's index, the gain over the DP global model, membership-inference leakage and communication cost;
+on the Adult census data we add demographic-parity and equal-opportunity gaps.
+\todo{One sentence, max 30 words, with the main measured finding from results/summary\_table.csv.}
+The outcome is a recommended operating configuration: which mechanism to use at a given privacy budget.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Differential privacy, fairness, federated learning, membership inference, non-IID data, personalisation.
+\end{IEEEkeywords}

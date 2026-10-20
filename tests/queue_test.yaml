@@ -1,0 +1,31 @@
+# Tiny end-to-end queue on generated data (CPU, ~5 min). Used to test sweep -> aggregate -> figures.
+#   PowerShell:  $env:PFL_RESULTS="tests\out\results"; $env:PFL_LOGS="tests\out\logs"; $env:PFL_QUEUE="tests\queue_test.yaml"
+#                .venv\Scripts\python scripts\sweep.py; .venv\Scripts\python scripts\aggregate.py
+#                $env:PFL_PAPER_OUT="tests\out\paper"; .venv\Scripts\python scripts\figures.py --dataset synthetic
+eps0: 4.0
+seeds: [0, 1]
+blocks:
+  - name: Q1
+    dataset: synthetic
+    eps: [inf, 8, 4, 1]
+    runs: [{method: fedavg, device: cpu}]
+  - name: Q2
+    dataset: synthetic
+    eps: [inf]
+    runs: [{method: local, device: cpu}, {method: perfedavg, device: cpu}, {method: ifca, device: cpu}, {method: fedper, device: cpu}]
+  - name: Q3
+    dataset: synthetic
+    eps: [eps0]
+    runs: [{method: local, device: cpu}, {method: perfedavg, device: cpu}, {method: ifca, device: cpu}, {method: fedper, device: cpu}]
+  - name: Q4
+    dataset: synthetic
+    eps: [eps0, inf]
+    runs: [{method: fedavg, aggregation: qffl, qffl_q: 1, device: cpu}, {method: fedavg, aggregation: qffl, qffl_q: 5, device: cpu}]
+  - name: Q5
+    dataset: synthetic_tab
+    eps: [inf, eps0]
+    runs: [{method: fedavg, device: cpu}, {method: local, device: cpu}, {method: fedper, device: cpu}]
+  - name: Q6
+    dataset: synthetic
+    eps: [8, 1]
+    runs: [{method: local, device: cpu}, {method: perfedavg, device: cpu}, {method: ifca, device: cpu}, {method: fedper, device: cpu}]

@@ -1,0 +1,37 @@
+# Base configuration. Values here override pfl/config.py DEFAULTS.
+# Change hyperparameters HERE (one place), tune only on the validation split,
+# and copy the final values into paper Table T3 (paper/tables/hyperparameters.tex).
+
+defaults:
+  data_dir: data
+  num_clients: 20
+  dirichlet_alpha: 0.3
+  min_client_size: 300
+  split: [0.7, 0.1, 0.2]
+  partition_seed: 42
+  rounds: 40
+  local_steps: 20
+  lr_local: 0.05
+  lr_server: 1.0
+  sample_rate: 0.03
+  clip_norm: 1.0
+  delta: 1.0e-5
+  loss_noise_ratio: 30.0
+  loss_clip: 3.0
+  ft_fraction: 0.1
+  perfedavg_alpha: 0.03
+  perfedavg_beta: 0.05
+  perfedavg_adapt_steps: 5
+  ifca_k: 3
+  eval_every: 10
+  mia: true
+  grad_backend: opacus      # switch to functorch if Opacus hooks fail on this machine
+  max_physical_batch: 128
+  device: auto
+
+dataset_overrides:
+  adult:
+    model: mlp
+    rounds: 30
+    local_steps: 10
+    lr_local: 0.1

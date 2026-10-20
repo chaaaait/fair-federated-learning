@@ -1,0 +1,35 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "t16demo"
+version = "1.0.0"
+description = "T16/P20 live demo: DP FedPer over a real Flower deployment (SuperLink + 3 SuperNodes over HTTP)"
+license = "MIT"
+dependencies = []  # torch, opacus, flwr and pfl are already installed in the project venv
+
+[tool.hatch.build.targets.wheel]
+packages = ["t16demo"]
+
+[tool.flwr.app]
+publisher = "t16"
+
+[tool.flwr.app.components]
+serverapp = "t16demo.server_app:app"
+clientapp = "t16demo.client_app:app"
+
+[tool.flwr.app.config]
+num-server-rounds = 5
+local-steps = 10
+epsilon = 4.0
+delta = 0.00001
+sample-rate = 0.03
+clip-norm = 1.0
+lr = 0.05
+dataset = "cifar10"
+max-examples = 9000        # 3 clients x ~3,000 images keeps a round to a few seconds
+num-partitions = 3
+data-dir = ""              # absolute path to the repo's data folder (run_demo.py sets it)
+device = "auto"
+seed = 0

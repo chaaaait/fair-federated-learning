@@ -1,0 +1,129 @@
+\section{Results}\label{sec:results}
+% ===================================================================================================
+% Claude Code, Block P2 (Sun). Write this section ONLY from results/summary_table.csv, eps_slopes.csv,
+% recommended.csv and sanity.txt. Every number must be traceable to those files. Report mean ± SD over
+% 3 seeds; accuracies in percentage points (pts). Interpret trends technically (why), not just narrate.
+% Keep each subsection 1-2 paragraphs. Delete these comment blocks when done.
+% ===================================================================================================
+
+\subsection{How Differential Privacy Redistributes Accuracy (M1)}
+% Fig. m1_accuracy_vs_eps + m1_fairness_vs_eps. Say: how mean and worst-10% accuracy of DP-FedAvg and of
+% fine-tuning fall as eps shrinks; whether the worst-10% falls faster than the mean (disparate impact);
+% how Jain's index and the SD move; whether fine-tuning stops beating DP-FedAvg at small eps (the old
+% synthetic finding was eps = 0.3) -> name the threshold if one exists, or say plainly that none appeared.
+\todo{Write from results.}
+
+\begin{figure*}[!t]
+\centering
+\maybefigure{m1_accuracy_vs_eps}{0.9\textwidth}
+\caption{Mean (a) and worst-10\% (b) client accuracy of DP-FedAvg and fine-tuning as the privacy budget shrinks
+(CIFAR-10, 20 clients, mean $\pm$ SD over three seeds; $\infty$ = no DP).}
+\label{fig:m1acc}
+\end{figure*}
+
+\begin{figure*}[!t]
+\centering
+\maybefigure{m1_fairness_vs_eps}{0.9\textwidth}
+\caption{Evenness of client accuracy: Jain's index (a) and standard deviation across clients (b).}
+\label{fig:m1fair}
+\end{figure*}
+
+\subsection{Mechanisms at a Common Budget (M2)}
+% Fig. m2_mechanisms_at_eps0 + Table main_results + Fig. m2_gain_per_client. Rank the mechanisms by mean
+% gain and by worst-10%; say which satisfy J >= J0 (Eq. problem); give the communication cost next to the
+% gain. Failure cases: share of clients made worse off (frac_hurt), IFCA cluster collapse (check the
+% assign_hist in the run JSONs: did all clients pick one cluster?), any mechanism below DP-FedAvg.
+\todo{Write from results.}
+
+\begin{figure*}[!t]
+\centering
+\maybefigure{m2_mechanisms_at_eps0}{0.95\textwidth}
+\caption{All mechanisms at the common budget $\eps_0$: mean accuracy, worst-10\% accuracy and Jain's index
+(mean $\pm$ SD over three seeds).}
+\label{fig:m2bars}
+\end{figure*}
+
+\begin{table*}[!t]
+\caption{Main results at the common budget $\eps_0$ on CIFAR-10 (mean $\pm$ SD over three seeds). Gain is relative
+to DP-FedAvg at the same budget; MIA AUC = membership-inference area under the curve (0.5 = random guessing); Comm.
+= total megabytes exchanged.}
+\label{tab:main}
+\centering
+\footnotesize
+\maybetable{main_results}
+\end{table*}
+
+\begin{figure}[!t]
+\centering
+\maybefigure{m2_gain_per_client}{\columnwidth}
+\caption{Per-client gain over DP-FedAvg at $\eps_0$, pooled over seeds; the dashed line marks no gain, and the
+label gives the share of clients made worse off.}
+\label{fig:gain}
+\end{figure}
+
+\subsection{Accuracy Lost per Unit of Privacy}
+% Fig. m2_accuracy_vs_eps_all + results/eps_slopes.csv. Which mechanism loses the fewest points per unit
+% eps, and over which range; where the curves cross (that is the core "per unit of privacy" answer).
+\todo{Write from results.}
+
+\begin{figure*}[!t]
+\centering
+\maybefigure{m2_accuracy_vs_eps_all}{0.95\textwidth}
+\caption{Mean (a) and worst-10\% (b) client accuracy of every mechanism across the privacy sweep.}
+\label{fig:m2sweep}
+\end{figure*}
+
+\subsection{Does a Fairness Objective Help under DP? (M3)}
+% Fig. m3_qffl_tradeoff. Compare q = 0, 1, 5 at eps0 and without DP: change in worst-10% vs change in
+% mean accuracy (the "price"), and the extra noise from the loss reports (sigma in the run JSONs).
+% If Q7 ran: q-FFL + FedPer.
+\todo{Write from results.}
+
+\begin{figure}[!t]
+\centering
+\maybefigure{m3_qffl_tradeoff}{\columnwidth}
+\caption{q-FFL at $\eps_0$ (solid) and without DP (dotted): worst-10\% against mean client accuracy for
+$q\in\{0,1,5\}$.}
+\label{fig:qffl}
+\end{figure}
+
+\subsection{Measured Leakage versus the Theoretical Budget}
+% Fig. privacy_mia_vs_eps + MIA columns. Does equal eps give equal measured leakage across mechanisms?
+% Non-private runs should show the highest AUC; note that the loss-threshold attack is weak, so these
+% numbers are lower bounds on leakage.
+\todo{Write from results.}
+
+\begin{figure}[!t]
+\centering
+\maybefigure{privacy_mia_vs_eps}{\columnwidth}
+\caption{Loss-threshold membership-inference AUC against the privacy budget (0.5 = random guessing).}
+\label{fig:mia}
+\end{figure}
+
+\subsection{Group Fairness on Adult}
+% Table adult_group_fairness. Accuracy, demographic-parity gap, equal-opportunity gap per mechanism,
+% without DP and at eps0. Does DP widen the gaps? Does personalisation by occupation narrow or widen them?
+\todo{Write from results.}
+
+\begin{table*}[!t]
+\caption{Adult (clients = occupations): accuracy and group-fairness gaps by sex, without DP and at $\eps_0$
+(mean $\pm$ SD over three seeds; gaps in percentage points, lower is fairer).}
+\label{tab:adult}
+\centering
+\footnotesize
+\maybetable{adult_group_fairness}
+\end{table*}
+
+\subsection{Communication and Compute Cost}
+% Table cost. MB per round and total (FedPer sends only the body; IFCA downloads m models), s/round with
+% and without DP (DP overhead factor), peak GPU memory. Relate to wireless / bandwidth-limited clients.
+\todo{Write from results.}
+
+\begin{table*}[!t]
+\caption{Cost per mechanism on CIFAR-10 at $\eps_0$ (20 clients; 32-bit parameters; DP overhead = seconds per
+round with DP divided by seconds per round without DP).}
+\label{tab:cost}
+\centering
+\footnotesize
+\maybetable{cost}
+\end{table*}

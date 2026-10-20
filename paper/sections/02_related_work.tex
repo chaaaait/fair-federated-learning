@@ -1,0 +1,87 @@
+\section{Related Work}\label{sec:related}
+We surveyed thirty studies in four groups: personalisation methods, fairness methods, privacy mechanisms and the
+attacks that motivate them, and the smaller body of work that treats privacy and fairness together.
+
+\subsection{Personalised Federated Learning}
+Personalisation methods differ mainly in where they draw the line between shared and client-specific parameters.
+Per-FedAvg~\cite{fallah2020personalized} meta-learns an initialisation from which a few local gradient steps give a
+well-adapted model. pFedMe~\cite{dinh2020personalized} separates the global and personal objectives with a Moreau
+envelope, and Ditto~\cite{li2021ditto} trains each personal model with a penalty that keeps it near the global one.
+FedAMP~\cite{huang2021personalized} uses attentive message passing so that similar clients pull each other's models
+together, while IFCA~\cite{ghosh2022efficient} maintains several cluster models and lets each client join the one
+that fits its data best. FedPer~\cite{arivazhagan2019federated} and FedRep~\cite{collins2021exploiting} share a
+common representation and keep the final layers on the client. Tan \emph{et al.}~\cite{tan2023towards} organise
+these approaches into data-based and model-based strategies. Taken together, these studies show that
+personalisation helps under heterogeneity, but almost none use a privacy mechanism, and most report only mean
+accuracy, so the effect on the spread of accuracy across clients cannot be read from their results.
+
+\subsection{Fairness in Federated Learning}
+``Fairness'' carries at least three meanings in FL. \emph{Performance-distribution} fairness asks for even accuracy
+across clients; q-FFL~\cite{li2020fair} achieves it by giving more weight to clients with high loss.
+\emph{Minimax} fairness optimises the worst-off client distribution directly, as in agnostic
+FL~\cite{mohri2019agnostic} and its fairness-constrained extension~\cite{du2021fairness}. \emph{Group} fairness asks
+for parity of outcomes across a protected attribute and is pursued by fairness-aware aggregation in
+FairFed~\cite{ezzeldin2023fairfed}. Duan \emph{et al.}~\cite{duan2021self} rebalance skewed client data instead, an
+approach that sits uneasily with privacy because it needs information about each client's label distribution. Shi
+\emph{et al.}~\cite{shi2024towards} provide a taxonomy of these notions. They are not interchangeable, and the
+surveyed studies rarely report more than one of them for the same experiment.
+
+\subsection{Privacy Mechanisms and Information Leakage}
+What a federated system leaks is bounded by what its messages and models reveal. Gradient inversion reconstructs
+training samples from shared updates~\cite{zhu2019deep}, and membership inference decides whether a record was used
+in training, both for centralised and federated models~\cite{shokri2017membership,nasr2019comprehensive}. The
+simplest membership attack thresholds the model's loss on a record, exploiting the gap between training and test
+loss~\cite{yeom2018privacy}; likelihood-ratio attacks are considerably stronger~\cite{carlini2022membership}.
+Differential privacy~\cite{dwork2006calibrating} bounds all such attacks, and DP-SGD~\cite{abadi2016deep} with
+R\'enyi-DP accounting~\cite{mironov2017renyi} is its standard realisation for deep networks, available in
+Opacus~\cite{yousefpour2021opacus}. Inside FL, Wei \emph{et al.}~\cite{wei2020federated} relate the privacy budget
+to convergence of a global model, Kim \emph{et al.}~\cite{kim2021federated} add the communication cost of local DP,
+Noble \emph{et al.}~\cite{noble2022differentially} study DP under heterogeneous client data, and Hu
+\emph{et al.}~\cite{hu2020personalized} were among the first to combine personalisation with a formal privacy
+guarantee. DP can protect a whole client's participation or individual records; client-level guarantees need
+thousands of clients per round to be useful~\cite{kairouz2021advances}, whereas record-level guarantees suit
+cross-silo settings in which each client holds the records of many people. Surveys of privacy-preserving FL are
+given in~\cite{yin2021comprehensive,kairouz2021advances}. These studies report accuracy against $\eps$ in
+aggregate; how that accuracy is distributed across clients---the quantity fairness is about---is not reported.
+
+\subsection{The Privacy--Fairness Trade-off}
+A smaller literature treats both objectives together. DP has disparate impact~\cite{bagdasaryan2019differential},
+caused by gradient misalignment~\cite{esipova2023disparate}, and two surveys map the resulting tension in
+FL~\cite{chen2023privacy,rafi2024fairness}. Padala \emph{et al.}~\cite{padala2021federated} combine an accuracy
+objective, a fairness constraint and DP in one framework, and PUFFLE~\cite{corbucci2024puffle} offers a tunable
+three-way trade-off with a client-side fairness regulariser. Bietti \emph{et al.}~\cite{bietti2022personalization}
+show that personalisation improves the privacy--accuracy trade-off. Most recently, DP-Ditto~\cite{zhao2025convergence}
+derives a convergence bound for Ditto under DP and the number of aggregation rounds that best uses a given budget,
+and FedGraph-Fair~\cite{khan2026fedgraph} combines dynamic client graphs with distributionally robust optimisation to
+enforce worst-case and group-risk parity. These works show the trade-off is real and tractable, but each proposes
+and defends a single method or tunes several objectives jointly.
+
+\subsection{Research Gap}
+Table~\ref{tab:related} summarises the position. Personalisation is known to soften the disparate impact of DP, and
+several personalisation mechanisms perform well on their own. Which mechanism is the most \emph{efficient} at a
+given privacy budget is not known, because the mechanisms have never been run against one another under a common
+budget and a common protocol. This paper addresses that question directly.
+
+\begin{table*}[!t]
+\caption{Comparison of related work and the gap addressed by this study.}
+\label{tab:related}
+\centering
+\footnotesize
+\begin{tabular}{p{2.6cm}p{4.0cm}p{3.2cm}p{6.6cm}}
+\toprule
+Study & Approach & Data / setting & Limitation for our question \\
+\midrule
+Fallah \emph{et al.}, 2020~\cite{fallah2020personalized} & Meta-learned initialisation (Per-FedAvg) & MNIST, CIFAR-10; synthetic non-IID split & No privacy mechanism; mean accuracy only, so the spread across clients is not observable \\
+Li \emph{et al.}, 2021~\cite{li2021ditto} & Personal models regularised towards a global model (Ditto) & FEMNIST, CelebA, Fashion-MNIST, Vehicle & Fairness studied without DP; interaction between the regulariser and privacy noise untested \\
+Ghosh \emph{et al.}, 2022~\cite{ghosh2022efficient} & Iterative cluster selection by lowest loss (IFCA) & Rotated MNIST/CIFAR-10, FEMNIST & No privacy mechanism; the loss-based cluster choice is itself a query on private data \\
+Li \emph{et al.}, 2020~\cite{li2020fair} & Loss-reweighted objective favouring high-loss clients (q-FFL) & FEMNIST, Sent140, Shakespeare, Vehicle & Developed without DP; whether the fairness gain survives clipping and noise is unknown \\
+Bagdasaryan \emph{et al.}, 2019~\cite{bagdasaryan2019differential} & Per-group degradation under DP-SGD & MNIST, Diversity in Faces, iNaturalist & Centralised; no personalisation, so the mitigating effect of per-client models is not measured \\
+Wei \emph{et al.}, 2020~\cite{wei2020federated} & Noise before aggregation, convergence bound & MNIST & Single global model; no personalisation and no fairness metric \\
+Bietti \emph{et al.}, 2022~\cite{bietti2022personalization} & Theory and experiments on personalisation under privacy noise & Convex settings, benchmark data & Shows personalisation helps, not which mechanism helps most per unit of budget \\
+Corbucci \emph{et al.}, 2024~\cite{corbucci2024puffle} & Tunable privacy--utility--fairness trade-off with a fairness regulariser & CelebA, Dutch, ACS Income & Tunes all three objectives jointly instead of isolating the cost of each \\
+Zhao \emph{et al.}, 2025~\cite{zhao2025convergence} & Ditto under DP with convergence analysis (DP-Ditto) & Standard FL benchmarks & Compares methods against one new method rather than comparing families under one protocol \\
+\midrule
+\textbf{This work} & Four personalisation families + q-FFL at one identical record-level budget & CIFAR-10 (Dirichlet, 20 clients); Adult (12 occupations) & --- \\
+\bottomrule
+\end{tabular}
+\end{table*}

@@ -1,0 +1,35 @@
+\section{Discussion}\label{sec:discussion}
+% Claude Code, Block P2. Three short subsections. Chaitanya rewrites this section in his own voice afterwards.
+
+\subsection{Recommended Operating Configuration}
+% Table recommended (results/recommended.csv): for each eps, the mechanism that solves Eq. (problem).
+% Turn it into a rule a practitioner can follow ("above eps = X use ..., below use ..."). Quantify.
+\todo{Write from results.}
+
+\begin{table}[!t]
+\caption{Recommended configuration per budget: the mechanism with the largest mean gain whose Jain index is at
+least that of DP-FedAvg ($J_0$), i.e. the solution of (\ref{eq:problem}).}
+\label{tab:recommended}
+\centering
+\footnotesize
+\resizebox{\columnwidth}{!}{\maybetable{recommended}}
+\end{table}
+
+\subsection{Why the Mechanisms Differ}
+% Explain the ranking with the mechanisms' structure, e.g.: noise is averaged over 20 clients in the shared
+% part but not in purely local training; FedPer adapts only a 1,290-parameter head to each client's label
+% mix; fine-tuning spends budget on local steps that are not averaged; IFCA's loss reports cost budget and
+% can collapse to one cluster; Per-FedAvg's two queries per meta-step halve its number of updates.
+% Support every explanation with a number from the results; mark anything untested as a hypothesis.
+\todo{Write from results.}
+
+\subsection{Limitations}
+The study has clear limits. It uses one image dataset with a synthetic label partition and one small tabular
+dataset with a natural partition; FEMNIST and other naturally federated datasets were left out for compute reasons.
+Twenty clients with full participation is a cross-silo setting; the conclusions need not carry over to cross-device
+FL with thousands of intermittent clients or to client-level DP. The model is deliberately small to fit a 4~GB GPU,
+and three seeds limit the statistical power for small differences. The loss-threshold attack is weak, so the
+measured leakage is a lower bound; a likelihood-ratio attack~\cite{carlini2022membership} would be stronger. Adult
+is dated and narrow~\cite{ding2021retiring}. Finally, the federation is simulated in one process; the Flower
+deployment demonstrates the same code over a real network stack but was not used for the measurements.
+\todo{Add any limitation the results reveal (e.g. a mechanism that never trains well at small eps).}
