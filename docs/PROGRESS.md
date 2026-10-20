@@ -106,7 +106,7 @@ Old synthetic finding (ε = 0.3: fine-tuning worse than DP global) → re-tested
 | 3 | CLAUDE.md + README | planning chat | Fri night | ✅ |
 | 4 | References verified + refs.bib | planning chat | Sat early | ✅ |
 | 5 | Paper §I–IV in IEEE LaTeX | planning chat | Sat early | ✅ |
-| 6 | S1: laptop env, data, Gate 1, launch sweep | Claude Code + Chaitanya | Tue 09:30 | 🟡 env ✅ tests ✅ data ✅ (CIFAR-10 60,000 imgs, 20 clients, sizes 771/2,696/5,484 · Adult 44,976 rows (45,222 after missing removed), 12 occupation clients, 976/3,889/6,020) · Adult Gate 1 PASS (~0.4 min/run) · CIFAR Gate 1 running · setup.tex filled except timing + demo sentence |
+| 6 | S1: laptop env, data, Gate 1, launch sweep | Claude Code + Chaitanya | Tue 09:30 | 🟡 env ✅ tests ✅ data ✅ (CIFAR-10 60,000 imgs, 20 clients, sizes 771/2,696/5,484 · Adult 44,976 rows (45,222 after missing removed), 12 occupation clients, 976/3,889/6,020) · Adult Gate 1 PASS (~0.4 min/run) · CIFAR Gate 1: all checks PASS except **time_budget** (DP run 7.2–12.0 min at 40 rounds; IFCA slowest; peak GPU ~0.84 GB) → full queue ≈ 14–16 h at 40 rounds; **rounds 40 vs 30 = Chaitanya's call** · setup.tex filled except timing + demo sentence |
 | 7 | S2: Flower demo built ✅ (Linux) → test on Windows; env.txt, lock file | Claude Code | Tue day | ⬜ |
 | 8 | Gate 2 (ε₀) | Chaitanya + Claude Code | Tue ~12:00 | ⬜ |
 | 9 | S3: aggregate, Gate 3, figures (sweep hard stop 19:00) | Claude Code | Tue 19:45 | ⬜ |
