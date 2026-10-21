@@ -100,8 +100,7 @@ hooks~\cite{yousefpour2021opacus}, cross-checked against a vectorised \texttt{to
 is accounted with Opacus' R\'enyi-DP accountant. For the sweeps, a single-process simulator runs all clients in turn
 on one GPU: with up to 147 runs, process-per-client orchestration would multiply the run time without changing any
 result. The same client code also runs in a Flower~\cite{beutel2020flower} deployment---one SuperLink and three
-SuperNodes exchanging messages over HTTP on the local machine---used to demonstrate the system end to end
-\todo{keep this sentence only if the Flower demo works; otherwise delete it}. Experiments ran on a laptop GPU
+SuperNodes exchanging messages over HTTP on the local machine---used to demonstrate the system end to end. Experiments ran on a laptop GPU
 (NVIDIA GeForce GTX 1650, 4~GB) under Windows; one DP run on CIFAR-10 takes about \todo{minutes} minutes. Code,
 configuration files, per-run results and the exact package versions are available at
 \url{https://github.com/chaaaait/t16-pfl-dp-fairness}.

@@ -24,7 +24,11 @@ Process logs: `logs\demo_superlink.log`, `logs\demo_supernode*.log`. Flower stat
 
 ## Tested
 - Linux, Flower 1.40.0, synthetic data, CPU: 3 rounds, all three clients reply, ε reaches the target exactly. ✅
-- Windows + GTX 1650: **to test in Block S2** (Claude Code). If native Windows fails: WSL2, else the recorded video.
+- Windows 11, Flower 1.41.0, CPU (21 Oct 2026, GPU busy with the sweep), no WSL needed: ✅
+  - synthetic, 3 rounds: ε 2.50 → 3.33 → 4.00, Jain 0.855, 61 s total.
+  - CIFAR-10 subset, 5 rounds: ε 3.00 → 4.00, mean acc 33.1%, worst 24.1%, Jain 0.964, **149 s total** (~29 s/round).
+  - All processes stop cleanly; ports 8000/9094–9096 are freed. No firewall prompt appeared (localhost only).
+- GPU timing: to measure after the sweep (CPU is already under the 3-minute target).
 
 ## Talking points (for the examiners)
 1. "These are four real processes talking over the network stack, not a loop in one program."

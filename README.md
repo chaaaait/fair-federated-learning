@@ -38,6 +38,10 @@ Exact versions: `requirements-lock.txt` and `env.txt`. Linux/macOS: use `.venv/b
 ```
 One run: `.venv\Scripts\python scripts\run.py --method fedper --eps 2 --seed 0`
 
+If the CIFAR-10 download fails with `CERTIFICATE_VERIFY_FAILED` (seen with Python's SSL store on Windows), fetch the
+archive with the system `curl` instead; torchvision checks its md5 and extracts it on the next run:
+`curl.exe -L -o data\cifar-10-python.tar.gz https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz`
+
 Hyperparameters live in one place: `configs/base.yaml`. The experiment list is `configs/queue.yaml`.
 
 ## Design in one paragraph

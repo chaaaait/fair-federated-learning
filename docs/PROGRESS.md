@@ -1,7 +1,7 @@
 # T16 / P20 — Project Progress Tracker
 **Single source of truth across all chats in this Project. Read this first. Update it whenever progress is made.**
 
-Last updated: 2026-10-21 01:20 (Claude Code — S1 checkpoint before Wi-Fi drop)
+Last updated: 2026-10-21 09:45 (Claude Code — S2 done, sweep running)
 
 ---
 
@@ -20,12 +20,13 @@ Last updated: 2026-10-21 01:20 (Claude Code — S1 checkpoint before Wi-Fi drop)
 ## 1. Now
 - **Review date moved later (Chaitanya, 20 Oct night)** — RE-PLAN times in CLAUDE.md no longer apply; finish ASAP. **Full queue, no cuts, ε₀ = 2 (locked).**
 - **Project folder is `C:\Users\Chaitanya\T16_P20_handoff_final\T16_P20`** (not `C:\Users\Chaitanya\T16_P20` as in CLAUDE.md).
-- **S1:** venv + torch 2.11.0+cu128 (sm_75 ✅) · opacus 1.6.0 · flwr **1.41.0** · CPU tests 4/4 PASS · datasets downloaded (offline OK now) · Adult Gate 1 PASS · CIFAR Gate 1 = see §9 item 6.
-- **Next:** CIFAR Gate 1 → commit → Chaitanya runs the full sweep overnight in his own PowerShell → S2 demo on CPU → S3 → P2 → S4.
+- **Sweep running** (full queue, 147 runs, **40 rounds**) in Chaitanya's PowerShell since **Wed 21 Oct 09:34**. First run (non-private FedAvg) took 282 s. Monitor: `scripts\status.py`, `logs\sweep.log`.
+- **S1 ✅ · S2 ✅** — Flower demo works on native Windows (CPU: CIFAR-10 subset, 5 rounds, 149 s). env.txt + requirements-lock.txt written.
+- **Next:** when the sweep finishes → S3 (aggregate, Gate 3, figures, setup.tex timing) → P2 → S4.
 - Journal: parked (Chaitanya decides later).
 
 ## 2. Need from Chaitanya
-- Extract the zip yourself (folder access from the chat was blocked) · laptop plugged in + sleep off all Tue · Gate 2 ~12:00 (ε₀, default 2) · stop the sweep at 19:00.
+- Keep the laptop plugged in, sleep off, and the sweep's PowerShell window open until it finishes (est. 14–16 h at 40 rounds — a scheduling guess, not a measured number) · tell Claude Code when it ends (or just say "continue").
 
 ---
 
@@ -106,9 +107,9 @@ Old synthetic finding (ε = 0.3: fine-tuning worse than DP global) → re-tested
 | 3 | CLAUDE.md + README | planning chat | Fri night | ✅ |
 | 4 | References verified + refs.bib | planning chat | Sat early | ✅ |
 | 5 | Paper §I–IV in IEEE LaTeX | planning chat | Sat early | ✅ |
-| 6 | S1: laptop env, data, Gate 1, launch sweep | Claude Code + Chaitanya | Tue 09:30 | 🟡 env ✅ tests ✅ data ✅ (CIFAR-10 60,000 imgs, 20 clients, sizes 771/2,696/5,484 · Adult 44,976 rows (45,222 after missing removed), 12 occupation clients, 976/3,889/6,020) · Adult Gate 1 PASS (~0.4 min/run) · CIFAR Gate 1: all checks PASS except **time_budget** (DP run 7.2–12.0 min at 40 rounds; IFCA slowest; peak GPU ~0.84 GB) → full queue ≈ 14–16 h at 40 rounds; **rounds 40 vs 30 = Chaitanya's call** · setup.tex filled except timing + demo sentence |
-| 7 | S2: Flower demo built ✅ (Linux) → test on Windows; env.txt, lock file | Claude Code | Tue day | ⬜ |
-| 8 | Gate 2 (ε₀) | Chaitanya + Claude Code | Tue ~12:00 | ⬜ |
+| 6 | S1: laptop env, data, Gate 1, launch sweep | Claude Code + Chaitanya | Tue 09:30 | ✅ (sweep launched Wed 09:34, 40 rounds) env ✅ tests ✅ data ✅ (CIFAR-10 60,000 imgs, 20 clients, sizes 771/2,696/5,484 · Adult 44,976 rows (45,222 after missing removed), 12 occupation clients, 976/3,889/6,020) · Adult Gate 1 PASS (~0.4 min/run) · CIFAR Gate 1: all checks PASS except **time_budget** (DP run 7.2–12.0 min at 40 rounds; IFCA slowest; peak GPU ~0.84 GB) → full queue ≈ 14–16 h at 40 rounds; **rounds 40 vs 30 = Chaitanya's call** · setup.tex filled except timing + demo sentence |
+| 7 | S2: Flower demo built ✅ (Linux) → test on Windows; env.txt, lock file | Claude Code | Tue day | ✅ Windows CPU: synthetic 3 rounds (ε→4.00, 61 s) + CIFAR-10 subset 5 rounds (ε→4.00, Jain 0.964, 149 s); env.txt + requirements-lock.txt; README CIFAR-SSL note; setup.tex Flower sentence kept |
+| 8 | Gate 2 (ε₀) | Chaitanya + Claude Code | Tue ~12:00 | ✅ ε₀ = 2 (Chaitanya, 20 Oct) |
 | 9 | S3: aggregate, Gate 3, figures (sweep hard stop 19:00) | Claude Code | Tue 19:45 | ⬜ |
 | 10 | P2: Results, Discussion, Conclusion, abstract | Claude Code | Tue 22:00 | ⬜ |
 | 11 | Turnitin + own-voice pass | Chaitanya | Tue night | ⬜ |
@@ -121,6 +122,7 @@ Old synthetic finding (ε = 0.3: fine-tuning worse than DP global) → re-tested
 ---
 
 ## 10. Changelog (newest first)
+- 2026-10-21 09:45 — S2 done: Flower demo verified on native Windows (CPU), env.txt + requirements-lock.txt, README note. Sweep launched 09:34 (147 runs, 40 rounds); first run 282 s. CIFAR Gate 1: all PASS except time_budget (accepted — no time cap now).
 - 2026-10-21 01:20 — Claude Code S1 checkpoint: venv/CUDA torch OK, CPU tests pass, data downloaded (Python SSL check failed on the CIFAR mirror → fetched with Windows curl, md5 verified), Adult Gate 1 PASS, setup.tex dataset numbers filled. Review moved later; full queue with ε₀ = 2.
 - 2026-10-20 01:20 — Re-plan: Sat–Mon lost, nothing ran. Everything moved to **Tue 20 Oct** (S1 08:00 → sweep 09:30 → hard stop 19:00 → results/paper/GitHub/deck → PDF 23:00). Pre-approved cut rules added to CLAUDE.md. Folder access from chat blocked → Chaitanya extracts the zip. Final zip rebuilt.
 - 2026-10-17 01:40 — Architecture diagram added (`scripts/architecture.py` → paper Fig. 1, also for the deck). Final hand-off zip `T16_P20_handoff_final.zip` supersedes v1/v2.
