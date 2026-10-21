@@ -9,6 +9,25 @@ that cost, but the personalisation families have never been compared at one iden
 training, DP-FedAvg and the q-FFL fairness objective — with every client answering the same private queries, so every
 method ends at the **same (ε, δ)**.
 
+## Results in brief
+CIFAR-10, 20 clients (Dirichlet α = 0.3), per-example DP-SGD, mean over 3 seeds (147 runs, 0 failed). At ε = 2:
+
+| Mechanism | Mean acc. (%) | Worst-10% acc. (%) | Jain | Gain vs DP-FedAvg (pts) | Total MB |
+|---|---|---|---|---|---|
+| DP-FedAvg (global) | 27.2 ± 1.7 | 12.1 ± 6.2 | 0.865 | — | 905 |
+| Fine-tuning | 51.8 ± 0.9 | 36.2 ± 2.0 | 0.950 | +24.6 | 814 |
+| Local only | 56.2 ± 0.6 | 38.1 ± 1.4 | 0.960 | +29.0 | 0 |
+| Per-FedAvg | 49.9 ± 0.8 | 32.8 ± 2.1 | 0.942 | +22.7 | 905 |
+| Clustered (IFCA) | 42.8 ± 2.7 | 24.0 ± 5.3 | 0.940 | +15.6 | 1809 |
+| FedPer | 54.1 ± 0.4 | 38.1 ± 0.8 | 0.959 | +26.8 | 896 |
+
+- DP hits the weakest clients hardest: from no DP to ε = 2, DP-FedAvg loses 13.1 pts of mean but 18.3 pts of worst-10% accuracy.
+- FedPer improves every client in every seed; local-only training has the highest mean under DP.
+- Below ε = 1, fine-tuning and Per-FedAvg lose the least accuracy per unit ε and keep the worst clients highest.
+- q-FFL stalls under DP (12.5% mean accuracy at ε = 2). Membership-inference AUC stays at 0.500–0.509 for all private runs.
+
+Source: `results/summary_table.csv` (all metrics), `results/recommended.csv`, `results/eps_slopes.csv`; details in the paper.
+
 ## What is measured
 | Group | Metrics |
 |---|---|
@@ -37,6 +56,15 @@ Exact versions: `requirements-lock.txt` and `env.txt`. Linux/macOS: use `.venv/b
 .venv\Scripts\python scripts\figures.py         # paper\figures\*.pdf|png, paper\tables\*.tex
 ```
 One run: `.venv\Scripts\python scripts\run.py --method fedper --eps 2 --seed 0`
+
+Every figure and table comes from the committed run files in `results\runs\`, so you can rebuild them without
+re-running the sweep:
+
+| Paper item | File | Command |
+|---|---|---|
+| Fig. 1 system diagram | `paper/figures/architecture.*` | `scripts\architecture.py` |
+| Dataset table, partition plots | `paper/tables/datasets.tex`, `paper/figures/partition_*` | `scripts\dataset_stats.py` |
+| All result figures (M1–M3, MIA) and Tables main / Adult / cost / recommended | `paper/figures/m*`, `privacy_mia_vs_eps`, `paper/tables/*.tex` | `scripts\aggregate.py` then `scripts\figures.py` |
 
 If the CIFAR-10 download fails with `CERTIFICATE_VERIFY_FAILED` (seen with Python's SSL store on Windows), fetch the
 archive with the system `curl` instead; torchvision checks its md5 and extracts it on the next run:
