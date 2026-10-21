@@ -28,7 +28,8 @@ Process logs: `logs\demo_superlink.log`, `logs\demo_supernode*.log`. Flower stat
   - synthetic, 3 rounds: ε 2.50 → 3.33 → 4.00, Jain 0.855, 61 s total.
   - CIFAR-10 subset, 5 rounds: ε 3.00 → 4.00, mean acc 33.1%, worst 24.1%, Jain 0.964, **149 s total** (~29 s/round).
   - All processes stop cleanly; ports 8000/9094–9096 are freed. No firewall prompt appeared (localhost only).
-- GPU timing: to measure after the sweep (CPU is already under the 3-minute target).
+- Windows 11, GTX 1650 (22 Oct 2026, after the sweep): CIFAR-10 subset, 5 rounds, ε → 4.00, Jain 0.968,
+  **103 s total** (~20 s/round). Use the GPU in the review; `--device cpu` (149 s) is the fallback.
 
 ## Talking points (for the examiners)
 1. "These are four real processes talking over the network stack, not a loop in one program."

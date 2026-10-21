@@ -11,7 +11,8 @@ cost of the loss reports needed by clustering and by the q-FFL fairness objectiv
 clients with a Dirichlet label partition, we sweep $\eps$ from 0.3 to 8 and measure mean and worst-10\% client
 accuracy, Jain's index, the gain over the DP global model, membership-inference leakage and communication cost;
 on the Adult census data we add demographic-parity and equal-opportunity gaps.
-\todo{One sentence, max 30 words, with the main measured finding from results/summary\_table.csv.}
+At $\eps=2$, FedPer roughly doubles DP-FedAvg's mean client accuracy (54.1\% versus 27.2\%) and triples its
+worst-10\% accuracy, whereas the q-FFL fairness objective stalls under DP.
 The outcome is a recommended operating configuration: which mechanism to use at a given privacy budget.
 \end{abstract}
 

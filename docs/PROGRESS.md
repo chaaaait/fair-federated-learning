@@ -1,7 +1,7 @@
 # T16 / P20 — Project Progress Tracker
 **Single source of truth across all chats in this Project. Read this first. Update it whenever progress is made.**
 
-Last updated: 2026-10-22 00:05 (Claude Code — S3 done)
+Last updated: 2026-10-22 00:15 (Claude Code — P2 drafted)
 
 ---
 
@@ -21,7 +21,8 @@ Last updated: 2026-10-22 00:05 (Claude Code — S3 done)
 - **Sweep finished: 147/147 runs, 0 failed** (Wed 09:34 → 23:22). **S3 ✅**: aggregate, Gate 3 (no anomalies), 7 figures + 4 tables, setup.tex fully filled.
 - **Key results (CIFAR-10, ε₀ = 2, mean over 3 seeds):** DP-FedAvg 27.2% mean / 12.1% worst-10% → FedPer 54.1 / 38.1, Local-only 56.2 / 38.1, Fine-tuning 51.8 / 36.2, Per-FedAvg 49.9 / 32.8, IFCA 42.8 / 24.0. Non-private FedAvg 40.3%.
 - **Failure cases to report:** q-FFL stalls under DP (12.5%; curve flat) · Per-FedAvg on Adult at ε₀ collapses to the majority class (gaps = 0 trivially) · local-only ≥ every federated mechanism under DP · loss-threshold MIA ≈ 0.50 AUC everywhere (weak attack).
-- **Next:** P2 (Results/Discussion/Conclusion/abstract) → S4 GitHub (Chaitanya creates the empty repo; first push needs his OK).
+- **P2 ✅ drafted:** §V Results, §VI Discussion (recommendation rule, why mechanisms differ, limitations), §VII Conclusion, abstract sentence, AI disclosure updated. No `	odo` left. **Not compiled locally** (MiKTeX lacks IEEEtran) → `paper_overleaf.zip` for Overleaf; check page count ≤ 10 there.
+- **Next:** S4 GitHub (Chaitanya creates the empty repo; first push needs his OK) · Chaitanya: Overleaf check + own-voice pass of §VI–VII.
 - Project folder: `C:\Users\Chaitanya\T16_P20_handoff_final\T16_P20`.
 
 ## 2. Need from Chaitanya
@@ -110,7 +111,7 @@ Old synthetic finding (ε = 0.3: fine-tuning worse than DP global) → re-tested
 | 7 | S2: Flower demo built ✅ (Linux) → test on Windows; env.txt, lock file | Claude Code | Tue day | ✅ Windows CPU: synthetic 3 rounds (ε→4.00, 61 s) + CIFAR-10 subset 5 rounds (ε→4.00, Jain 0.964, 149 s); env.txt + requirements-lock.txt; README CIFAR-SSL note; setup.tex Flower sentence kept |
 | 8 | Gate 2 (ε₀) | Chaitanya + Claude Code | Tue ~12:00 | ✅ ε₀ = 2 (Chaitanya, 20 Oct) |
 | 9 | S3: aggregate, Gate 3, figures (sweep hard stop 19:00) | Claude Code | Tue 19:45 | ✅ Thu 00:05 — full queue, Gate 3 clean |
-| 10 | P2: Results, Discussion, Conclusion, abstract | Claude Code | Tue 22:00 | ⬜ |
+| 10 | P2: Results, Discussion, Conclusion, abstract | Claude Code | Tue 22:00 | ✅ Thu 00:15 — drafted from results only; not yet compiled (Overleaf) |
 | 11 | Turnitin + own-voice pass | Chaitanya | Tue night | ⬜ |
 | 12 | S4: GitHub repo + README final + v1.0 | Claude Code + Chaitanya | Tue 22:30 | ⬜ |
 | 13 | D1: final deck | claude.ai chat | Tue 23:00 | ⬜ |
@@ -121,6 +122,7 @@ Old synthetic finding (ε = 0.3: fine-tuning worse than DP global) → re-tested
 ---
 
 ## 10. Changelog (newest first)
+- 2026-10-22 00:15 — P2 drafted from results CSV/JSON only; every number cross-checked. GPU demo timed: 103 s for 5 rounds. figures.py: recommended table now shows only the main partition (α=1 check moved to text). paper_overleaf.zip rebuilt.
 - 2026-10-22 00:05 — S3 done: 147/147 runs, Gate 3 clean, figures/tables built, setup.tex timing filled (6.3–10.8 min per DP run; 147 runs ≈ 14 h). q-FFL-under-DP stall checked: code matches q-FedAvg; DP noise inflates the update norm in its step normaliser → reported as a failure case.
 - 2026-10-21 09:45 — S2 done: Flower demo verified on native Windows (CPU), env.txt + requirements-lock.txt, README note. Sweep launched 09:34 (147 runs, 40 rounds); first run 282 s. CIFAR Gate 1: all PASS except time_budget (accepted — no time cap now).
 - 2026-10-21 01:20 — Claude Code S1 checkpoint: venv/CUDA torch OK, CPU tests pass, data downloaded (Python SSL check failed on the CIFAR mirror → fetched with Windows curl, md5 verified), Adult Gate 1 PASS, setup.tex dataset numbers filled. Review moved later; full queue with ε₀ = 2.

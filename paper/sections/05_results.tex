@@ -1,17 +1,20 @@
 \section{Results}\label{sec:results}
-% ===================================================================================================
-% Claude Code, Block P2 (Sun). Write this section ONLY from results/summary_table.csv, eps_slopes.csv,
-% recommended.csv and sanity.txt. Every number must be traceable to those files. Report mean ± SD over
-% 3 seeds; accuracies in percentage points (pts). Interpret trends technically (why), not just narrate.
-% Keep each subsection 1-2 paragraphs. Delete these comment blocks when done.
-% ===================================================================================================
+All numbers are means $\pm$ standard deviations over three seeds; accuracies and gains are in percentage points
+(pts). All 147 runs finished, and every one of the 111 private runs spent its target budget to within 0.001.
 
 \subsection{How Differential Privacy Redistributes Accuracy (M1)}
-% Fig. m1_accuracy_vs_eps + m1_fairness_vs_eps. Say: how mean and worst-10% accuracy of DP-FedAvg and of
-% fine-tuning fall as eps shrinks; whether the worst-10% falls faster than the mean (disparate impact);
-% how Jain's index and the SD move; whether fine-tuning stops beating DP-FedAvg at small eps (the old
-% synthetic finding was eps = 0.3) -> name the threshold if one exists, or say plainly that none appeared.
-\todo{Write from results.}
+DP does not cost every client the same (Fig.~\ref{fig:m1acc}). Moving DP-FedAvg from no privacy to $\eps_0=2$ lowers
+mean client accuracy by 13.1 pts (40.3\% to 27.2\%) but worst-10\% accuracy by 18.3 pts (30.4\% to 12.1\%); at
+$\eps=0.3$ the worst-10\% clients are left at 2.5\% while the mean is still 15.8\%. The spread grows accordingly
+(Fig.~\ref{fig:m1fair}): Jain's index falls from 0.976 without DP to 0.865 at $\eps_0$ and 0.703 at $\eps=0.3$, and
+the standard deviation across clients rises from 6.3 to 10.5 pts. The worst-10\% figure is also the least stable
+across seeds ($\pm$6.2 pts at $\eps_0$), because which clients end up at the bottom depends on the noise draw.
+
+Fine-tuning the DP global model locally removes most of this disparity. Its mean accuracy falls only from 59.4\% to
+51.8\% between no DP and $\eps_0$, and its worst-10\% accuracy from 39.8\% to 36.2\%. Its gain over DP-FedAvg
+\emph{grows} as the budget shrinks, from 19.1 pts without DP to 24.6 pts at $\eps_0$ and 31.0 pts at $\eps=0.3$. We
+therefore find no budget in the sweep below which fine-tuning stops paying off; the earlier synthetic observation
+that it fell behind the DP global model at $\eps=0.3$ is not reproduced on CIFAR-10.
 
 \begin{figure*}[!t]
 \centering
@@ -29,11 +32,20 @@
 \end{figure*}
 
 \subsection{Mechanisms at a Common Budget (M2)}
-% Fig. m2_mechanisms_at_eps0 + Table main_results + Fig. m2_gain_per_client. Rank the mechanisms by mean
-% gain and by worst-10%; say which satisfy J >= J0 (Eq. problem); give the communication cost next to the
-% gain. Failure cases: share of clients made worse off (frac_hurt), IFCA cluster collapse (check the
-% assign_hist in the run JSONs: did all clients pick one cluster?), any mechanism below DP-FedAvg.
-\todo{Write from results.}
+At $\eps_0=2$ every personalised mechanism beats DP-FedAvg by a wide margin (Fig.~\ref{fig:m2bars},
+Table~\ref{tab:main}). Ranked by mean gain: local-only training $+29.0\pm1.1$, FedPer $+26.8\pm1.5$, fine-tuning
+$+24.6\pm0.8$, Per-FedAvg $+22.7\pm1.0$ and IFCA $+15.6\pm2.1$ pts. On the worst-10\% clients FedPer and local-only
+tie at 38.1\%, followed by fine-tuning (36.2\%), Per-FedAvg (32.8\%) and IFCA (24.0\%), against 12.1\% for
+DP-FedAvg. All five satisfy the evenness constraint of (\ref{eq:problem}): their Jain indices (0.940--0.960) exceed
+$J_0=0.865$. FedPer is the most repeatable (SD 0.4 pts in mean and 0.8 pts in worst-10\% accuracy).
+
+Gains are not universal (Fig.~\ref{fig:gain}). FedPer improved every client in every seed. Fine-tuning, local-only
+training and Per-FedAvg each left 1.7\% of client--seed pairs worse off than DP-FedAvg, and IFCA 11.7\%. IFCA did not
+collapse to a single cluster: in all 18 IFCA runs the smallest of the three clusters still held 3 to 6 clients at the
+end. Its weaker result comes instead from splitting each cluster's training over fewer clients, and it
+pays double the communication (Table~\ref{tab:cost}). The striking result is that local-only training, which shares
+nothing, has the highest mean accuracy: under record-level DP with this label skew, federation adds no mean accuracy
+over training alone, although FedPer matches local training on the worst clients with lower variance.
 
 \begin{figure*}[!t]
 \centering
@@ -62,9 +74,14 @@ label gives the share of clients made worse off.}
 \end{figure}
 
 \subsection{Accuracy Lost per Unit of Privacy}
-% Fig. m2_accuracy_vs_eps_all + results/eps_slopes.csv. Which mechanism loses the fewest points per unit
-% eps, and over which range; where the curves cross (that is the core "per unit of privacy" answer).
-\todo{Write from results.}
+Above $\eps=2$ the budget barely matters: between $\eps=4$ and $\eps=2$ every mechanism loses at most 1.1 pts of mean
+accuracy per unit of $\eps$ (Fig.~\ref{fig:m2sweep}). Below $\eps=1$ the cost rises steeply and unevenly. Between
+$\eps=1$ and $\eps=0.5$, IFCA loses 10.1 pts per unit $\eps$, FedPer 8.5, local-only and DP-FedAvg 7.6, fine-tuning
+3.7 and Per-FedAvg only 2.0. Per-FedAvg is almost insensitive to the budget: its mean accuracy stays between 49.1\%
+and 50.1\% from $\eps=0.5$ to $\eps=8$, about 7 pts below its non-private 56.8\%. The curves therefore cross. At
+$\eps=0.5$ the mean ranking is local-only (49.7\%), Per-FedAvg (49.1\%), fine-tuning (48.6\%) and FedPer (47.4\%), and
+on the worst-10\% clients Per-FedAvg (28.9\%) and fine-tuning (28.6\%) overtake local-only (24.6\%) and FedPer
+(22.7\%). The mechanisms that adapt a shared model with a few local steps degrade most gracefully at small budgets.
 
 \begin{figure*}[!t]
 \centering
@@ -74,10 +91,14 @@ label gives the share of clients made worse off.}
 \end{figure*}
 
 \subsection{Does a Fairness Objective Help under DP? (M3)}
-% Fig. m3_qffl_tradeoff. Compare q = 0, 1, 5 at eps0 and without DP: change in worst-10% vs change in
-% mean accuracy (the "price"), and the extra noise from the loss reports (sigma in the run JSONs).
-% If Q7 ran: q-FFL + FedPer.
-\todo{Write from results.}
+It does not, in our setting (Fig.~\ref{fig:qffl}). Without DP, q-FFL already lowers both mean and worst-10\%
+accuracy of the global model: from 40.3\%/30.4\% at $q=0$ to 29.5\%/9.7\% at $q=1$ and 23.6\%/2.7\% at $q=5$. At
+$\eps_0$ it fails outright: mean accuracy is 12.5\% ($q=1$) and 12.1\% ($q=5$), the worst-10\% clients reach 0\%, and
+85\% of client--seed pairs end below DP-FedAvg. The validation curves of these runs are flat in every seed (no run
+changes by more than 0.5 pts between rounds 10 and 40), so the global model barely moves. The privatised loss reports cost little budget---the noise multiplier
+rises by about 2\% (2.06 versus 2.02)---so the failure is not a budget effect; Section~\ref{sec:discussion} gives the
+explanation. Combined with FedPer, q-FFL gives 47.0\% mean and 25.4\% worst-10\% accuracy, below plain FedPer
+(54.1\%/38.1\%), and $q=1$ and $q=5$ differ by less than 0.1 pts.
 
 \begin{figure}[!t]
 \centering
@@ -88,10 +109,11 @@ $q\in\{0,1,5\}$.}
 \end{figure}
 
 \subsection{Measured Leakage versus the Theoretical Budget}
-% Fig. privacy_mia_vs_eps + MIA columns. Does equal eps give equal measured leakage across mechanisms?
-% Non-private runs should show the highest AUC; note that the loss-threshold attack is weak, so these
-% numbers are lower bounds on leakage.
-\todo{Write from results.}
+The loss-threshold attack finds almost nothing to exploit (Fig.~\ref{fig:mia}). Across all private runs the mean
+AUC lies between 0.500 and 0.509, and at $\eps_0$ the mechanisms are within 0.006 of each other, so an equal $\eps$
+did give comparable measured leakage. Without DP, local-only training leaks most (AUC 0.525), followed by fine-tuning
+(0.514); both fit a model to one client's data. Because the attack is weak even without DP, these values are lower
+bounds on leakage and cannot rank the mechanisms' real privacy risk.
 
 \begin{figure}[!t]
 \centering
@@ -101,9 +123,14 @@ $q\in\{0,1,5\}$.}
 \end{figure}
 
 \subsection{Group Fairness on Adult}
-% Table adult_group_fairness. Accuracy, demographic-parity gap, equal-opportunity gap per mechanism,
-% without DP and at eps0. Does DP widen the gaps? Does personalisation by occupation narrow or widen them?
-\todo{Write from results.}
+On Adult the mechanisms differ little in accuracy (Table~\ref{tab:adult}): 82.8--84.2\% without DP and 82.0--83.2\%
+at $\eps_0$, except Per-FedAvg. DP narrows DP-FedAvg's demographic-parity gap between the sexes (20.1 to 14.5 pts)
+but widens its equal-opportunity gap (18.3 to 20.1 pts). Personalisation by occupation does not close the gaps under
+DP: at $\eps_0$ every working mechanism has a larger demographic-parity gap (16.5--18.8 pts) and a larger
+equal-opportunity gap (20.5--25.2 pts) than DP-FedAvg. Without DP the picture differs: local training and
+fine-tuning have the smallest equal-opportunity gaps (9.8 and 12.2 pts). Per-FedAvg at $\eps_0$ is a failure case:
+in all three seeds it predicts a single class on every client, so its accuracy (76.8\%) is close to the majority
+rate and both gaps are exactly zero---a trivially ``fair'' but useless model.
 
 \begin{table*}[!t]
 \caption{Adult (clients = occupations): accuracy and group-fairness gaps by sex, without DP and at $\eps_0$
@@ -115,9 +142,13 @@ $q\in\{0,1,5\}$.}
 \end{table*}
 
 \subsection{Communication and Compute Cost}
-% Table cost. MB per round and total (FedPer sends only the body; IFCA downloads m models), s/round with
-% and without DP (DP overhead factor), peak GPU memory. Relate to wireless / bandwidth-limited clients.
-\todo{Write from results.}
+Communication separates the mechanisms more than compute does (Table~\ref{tab:cost}). DP-FedAvg and Per-FedAvg move
+22.6 MB per round (905 MB in total), and FedPer slightly less (22.4 MB) because the head never leaves the client.
+Fine-tuning spends the last tenth of its budget locally and so exchanges 814 MB. IFCA sends all three cluster models
+to every client and costs 45.2 MB per round, 1,809 MB in total, for the smallest gain. Local-only training sends
+nothing. Per-example DP makes a round 1.4--1.8$\times$ slower (for example 5.4 to 9.5 s for FedPer), and peak GPU
+memory stays at 631--642 MB for every mechanism. For bandwidth-limited wireless clients, FedPer and fine-tuning give
+nearly the best accuracy at the lowest communication among the federated mechanisms.
 
 \begin{table*}[!t]
 \caption{Cost per mechanism on CIFAR-10 at $\eps_0$ (20 clients; 32-bit parameters; DP overhead = seconds per

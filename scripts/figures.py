@@ -326,7 +326,8 @@ def table_recommended(dataset="cifar10"):
     if not p.exists():
         return print("  skip table recommended")
     rec = pd.read_csv(p)
-    rec = rec[rec.dataset == dataset].sort_values("eps", ascending=False)
+    rec = rec[rec.dataset == dataset]
+    rec = rec[rec.alpha == rec.alpha.min()].sort_values("eps", ascending=False)  # main partition; alpha=1 check is in the text
     rows = []
     for _, r in rec.iterrows():
         eps = "$\\infty$" if np.isinf(r.eps) else f"{r.eps:g}"

@@ -1,14 +1,21 @@
 \section{Discussion}\label{sec:discussion}
-% Claude Code, Block P2. Three short subsections. Chaitanya rewrites this section in his own voice afterwards.
 
 \subsection{Recommended Operating Configuration}
-% Table recommended (results/recommended.csv): for each eps, the mechanism that solves Eq. (problem).
-% Turn it into a rule a practitioner can follow ("above eps = X use ..., below use ..."). Quantify.
-\todo{Write from results.}
+Table~\ref{tab:recommended} solves (\ref{eq:problem}) at every budget. Without DP, FedPer is the only mechanism whose
+accuracy distribution is at least as even as FedAvg's ($J=0.976$), and it adds 22.8 pts. From $\eps=8$ down to
+$\eps=0.5$ local-only DP training has the largest mean gain (28.7--29.0 pts), with FedPer 1.9--2.7 pts behind it on
+the mean and tied with it on the worst-10\% clients at $\eps_0$. At $\eps=0.3$ only DP-FedAvg and fine-tuning were
+run, so fine-tuning (+31.0 pts) is recommended there by default. As a rule for this setting: \emph{with no or weak
+privacy, use FedPer; at $\eps\ge1$, train locally or use FedPer if a shared model is needed; at $\eps\le0.5$, prefer
+fine-tuning or Per-FedAvg when the worst clients matter, since they keep the highest worst-10\% accuracy}. The rule
+depends on heterogeneity. In a check with a milder Dirichlet partition ($\alpha_{\mathrm{Dir}}=1.0$) at $\eps_0$, the
+gains shrink to 8.6 pts for FedPer and 6.4 pts for fine-tuning, and neither keeps Jain's index at the level of
+DP-FedAvg (0.974 and 0.972 versus 0.980), so (\ref{eq:problem}) recommends keeping DP-FedAvg.
 
 \begin{table}[!t]
-\caption{Recommended configuration per budget: the mechanism with the largest mean gain whose Jain index is at
-least that of DP-FedAvg ($J_0$), i.e. the solution of (\ref{eq:problem}).}
+\caption{Recommended configuration per budget on CIFAR-10 ($\alpha_{\mathrm{Dir}}=0.3$): the mechanism with the
+largest mean gain whose Jain index is at least that of DP-FedAvg ($J_0$), i.e. the solution of (\ref{eq:problem}).
+At $\eps=0.3$ only DP-FedAvg and fine-tuning were run.}
 \label{tab:recommended}
 \centering
 \footnotesize
@@ -16,12 +23,39 @@ least that of DP-FedAvg ($J_0$), i.e. the solution of (\ref{eq:problem}).}
 \end{table}
 
 \subsection{Why the Mechanisms Differ}
-% Explain the ranking with the mechanisms' structure, e.g.: noise is averaged over 20 clients in the shared
-% part but not in purely local training; FedPer adapts only a 1,290-parameter head to each client's label
-% mix; fine-tuning spends budget on local steps that are not averaged; IFCA's loss reports cost budget and
-% can collapse to one cluster; Per-FedAvg's two queries per meta-step halve its number of updates.
-% Support every explanation with a number from the results; mark anything untested as a hypothesis.
-\todo{Write from results.}
+\emph{Label skew dominates.} With $\alpha_{\mathrm{Dir}}=0.3$ a client holds 3 to 7 classes with more than 5\% of its
+data, so a model fitted to its own label mix is already a strong classifier for its own test set. This is why every
+personalised mechanism gains 15.6--29.0 pts over the shared model at $\eps_0$, and why the gain falls to 6--9 pts when
+the partition is milder. A single global model must spread its capacity over all ten classes, and DP noise erodes it
+most on clients whose label mix differs from the average, which explains the 18.3-pt fall of the worst-10\% clients.
+
+\emph{FedPer and local training.} FedPer shares the 140{,}064-parameter body, whose update is averaged over 20 clients,
+and keeps the 1{,}290-parameter head local, so each client fits its own label mix without that head being noised by
+other clients' data. That it ends 2.1 pts below purely local training at $\eps_0$ suggests the shared body brings
+little useful signal under per-example DP noise at this scale; we did not test this directly, so it remains a
+hypothesis. FedPer's advantage over local training is stability: it improved every client in every seed, and its
+worst-10\% accuracy varied by 0.8 pts across seeds against 1.4 pts for local training.
+
+\emph{Fine-tuning and Per-FedAvg at small budgets.} Both start from a shared model and adapt it with a few local steps.
+When $\eps$ shrinks, the noise per step rises, and methods that take many noisy steps on each client (local
+training, FedPer) lose more per unit $\eps$ (7.6 and 8.5 pts between $\eps=1$ and $0.5$) than fine-tuning (3.7) or
+Per-FedAvg (2.0). Per-FedAvg's near-constant accuracy across budgets is consistent with a different bottleneck: each
+meta-step uses two private queries, so it takes 10 updates per round instead of 20, and its accuracy seems limited by
+this smaller number of updates rather than by noise. This, too, is a hypothesis that a run with more meta-steps could
+test.
+
+\emph{IFCA.} The loss reports that choose a cluster cost some budget (they raised $\sigma$ by about 6\%, the largest
+increase of any mechanism), and clustering did not collapse, but each cluster model is trained by only a third of the clients on average. It therefore
+learns more slowly, has the lowest gain and the largest seed-to-seed spread among the personalised mechanisms
+($\pm$5.3 pts on the worst-10\%), and costs twice the communication.
+
+\emph{Why q-FFL stalls under DP.} q-FedAvg divides the aggregated update by
+$\sum_k\big(LF_k^{q}+qF_k^{q-1}\lVert\Delta w_k\rVert^2\big)$, with $L=1/\eta$. Gaussian noise added to every step
+inflates the update norm $\lVert\Delta w_k\rVert$, so the denominator grows and the server step shrinks towards zero.
+This matches the flat validation curves at $\eps_0$. Without DP the norm term is smaller but still present, which is
+consistent with q-FFL learning more slowly than FedAvg there too. The fairness reweighting never gets the chance to act: instead of raising the
+worst clients, q-FFL leaves 85\% of client--seed pairs below DP-FedAvg. A fairness objective whose step size depends
+on update norms is thus poorly matched to DP-SGD unless $L$ is retuned for the noise level, which we did not do.
 
 \subsection{Limitations}
 The study has clear limits. It uses one image dataset with a synthetic label partition and one small tabular
@@ -32,4 +66,10 @@ and three seeds limit the statistical power for small differences. The loss-thre
 measured leakage is a lower bound; a likelihood-ratio attack~\cite{carlini2022membership} would be stronger. Adult
 is dated and narrow~\cite{ding2021retiring}. Finally, the federation is simulated in one process; the Flower
 deployment demonstrates the same code over a real network stack but was not used for the measurements.
-\todo{Add any limitation the results reveal (e.g. a mechanism that never trains well at small eps).}
+
+The results add four limits of their own. All mechanisms share one hyperparameter setting, not tuned per mechanism or
+per budget; q-FFL in particular used the standard $L=1/\eta$, and a retuned $L$ might avoid the stall. Per-FedAvg
+collapsed to a single predicted class on Adult at $\eps_0$, so its group-fairness gaps there carry no information.
+The smallest budget, $\eps=0.3$, was run only for DP-FedAvg and fine-tuning. And because local-only training has the highest
+mean accuracy at every private budget where it ran, our ranking speaks to which personalisation mechanism to choose,
+not to whether federation pays off under record-level DP at this scale.
