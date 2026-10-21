@@ -1,0 +1,509 @@
+{
+ "status": "ok",
+ "config": {
+  "dataset": "adult",
+  "data_dir": "data",
+  "num_clients": 20,
+  "dirichlet_alpha": 0.3,
+  "min_client_size": 300,
+  "adult_min_rows": 500,
+  "split": [
+   0.7,
+   0.1,
+   0.2
+  ],
+  "partition_seed": 42,
+  "max_examples": null,
+  "model": "mlp",
+  "method": "fedavg",
+  "aggregation": "mean",
+  "qffl_q": 0.0,
+  "ft_branch": true,
+  "ft_fraction": 0.1,
+  "rounds": 30,
+  "local_steps": 10,
+  "lr_local": 0.1,
+  "lr_server": 1.0,
+  "perfedavg_alpha": 0.03,
+  "perfedavg_beta": 0.05,
+  "perfedavg_adapt_steps": 5,
+  "ifca_k": 3,
+  "epsilon": 2.0,
+  "delta": 1e-05,
+  "sample_rate": 0.03,
+  "clip_norm": 1.0,
+  "loss_noise_ratio": 30.0,
+  "loss_clip": 3.0,
+  "grad_backend": "opacus",
+  "max_physical_batch": 128,
+  "eval_every": 10,
+  "mia": true,
+  "seed": 0,
+  "device": "auto",
+  "run_id": "adult__fedavg__eps2__s0",
+  "blocks": [
+   "Q5"
+  ]
+ },
+ "privacy": {
+  "private": true,
+  "epsilon_target": 2.0,
+  "epsilon_spent": 1.999857589588592,
+  "delta": 1e-05,
+  "sigma": 1.4144606978449783,
+  "sigma_loss": 42.433820935349345,
+  "sample_rate": 0.03,
+  "clip_norm": 1.0,
+  "grad_queries_per_client": 300,
+  "loss_queries_per_client": 0,
+  "observed_queries_per_client": [
+   [
+    330,
+    0
+   ]
+  ]
+ },
+ "data": {
+  "dataset": "adult",
+  "n_total": 44976,
+  "num_features": 33,
+  "input_shape": [
+   33
+  ],
+  "num_classes": 2,
+  "num_clients": 12,
+  "clients": [
+   {
+    "name": "Craft-repair",
+    "n": 6020,
+    "n_train": 4214,
+    "n_val": 602,
+    "n_test": 1204,
+    "class_hist": [
+     4665,
+     1355
+    ],
+    "female_frac": 0.05232558139534882,
+    "positive_rate": 0.22508305647840532
+   },
+   {
+    "name": "Prof-specialty",
+    "n": 6008,
+    "n_train": 4206,
+    "n_val": 601,
+    "n_test": 1201,
+    "class_hist": [
+     3304,
+     2704
+    ],
+    "female_frac": 0.3666777629826897,
+    "positive_rate": 0.45006657789613846
+   },
+   {
+    "name": "Exec-managerial",
+    "n": 5984,
+    "n_train": 4189,
+    "n_val": 598,
+    "n_test": 1197,
+    "class_hist": [
+     3117,
+     2867
+    ],
+    "female_frac": 0.28810160427807485,
+    "positive_rate": 0.47911096256684493
+   },
+   {
+    "name": "Adm-clerical",
+    "n": 5540,
+    "n_train": 3878,
+    "n_val": 554,
+    "n_test": 1108,
+    "class_hist": [
+     4784,
+     756
+    ],
+    "female_frac": 0.6732851985559567,
+    "positive_rate": 0.13646209386281588
+   },
+   {
+    "name": "Sales",
+    "n": 5408,
+    "n_train": 3786,
+    "n_val": 541,
+    "n_test": 1081,
+    "class_hist": [
+     3953,
+     1455
+    ],
+    "female_frac": 0.35521449704142016,
+    "positive_rate": 0.26904585798816566
+   },
+   {
+    "name": "Other-service",
+    "n": 4808,
+    "n_train": 3366,
+    "n_val": 481,
+    "n_test": 961,
+    "class_hist": [
+     4612,
+     196
+    ],
+    "female_frac": 0.5495008319467554,
+    "positive_rate": 0.04076539101497504
+   },
+   {
+    "name": "Machine-op-inspct",
+    "n": 2970,
+    "n_train": 2079,
+    "n_val": 297,
+    "n_test": 594,
+    "class_hist": [
+     2605,
+     365
+    ],
+    "female_frac": 0.267003367003367,
+    "positive_rate": 0.12289562289562289
+   },
+   {
+    "name": "Transport-moving",
+    "n": 2316,
+    "n_train": 1621,
+    "n_val": 232,
+    "n_test": 463,
+    "class_hist": [
+     1838,
+     478
+    ],
+    "female_frac": 0.05397236614853196,
+    "positive_rate": 0.20639032815198619
+   },
+   {
+    "name": "Handlers-cleaners",
+    "n": 2046,
+    "n_train": 1432,
+    "n_val": 205,
+    "n_test": 409,
+    "class_hist": [
+     1911,
+     135
+    ],
+    "female_frac": 0.12365591397849462,
+    "positive_rate": 0.06598240469208211
+   },
+   {
+    "name": "Farming-fishing",
+    "n": 1480,
+    "n_train": 1036,
+    "n_val": 148,
+    "n_test": 296,
+    "class_hist": [
+     1308,
+     172
+    ],
+    "female_frac": 0.06418918918918914,
+    "positive_rate": 0.11621621621621622
+   },
+   {
+    "name": "Tech-support",
+    "n": 1420,
+    "n_train": 994,
+    "n_val": 142,
+    "n_test": 284,
+    "class_hist": [
+     1009,
+     411
+    ],
+    "female_frac": 0.39014084507042257,
+    "positive_rate": 0.28943661971830986
+   },
+   {
+    "name": "Protective-serv",
+    "n": 976,
+    "n_train": 683,
+    "n_val": 98,
+    "n_test": 195,
+    "class_hist": [
+     669,
+     307
+    ],
+    "female_frac": 0.125,
+    "positive_rate": 0.3145491803278688
+   }
+  ]
+ },
+ "model": {
+  "name": "mlp",
+  "params": 4322,
+  "head_params": 66
+ },
+ "views": {
+  "fedavg": {
+   "acc_test": [
+    0.7923587560653687,
+    0.7660282850265503,
+    0.7092732191085815,
+    0.8935018181800842,
+    0.7992599606513977,
+    0.9594173431396484,
+    0.8989898562431335,
+    0.781857430934906,
+    0.9437653422355652,
+    0.8581081032752991,
+    0.7077464461326599,
+    0.7538461685180664
+   ],
+   "summary": {
+    "mean": 0.8220127274592718,
+    "worst10": 0.7085098326206207,
+    "std": 0.0829659487470068,
+    "var": 0.006883348651490959,
+    "jain": 0.9899158117327541,
+    "min": 0.7077464461326599,
+    "max": 0.9594173431396484,
+    "k": 12
+   },
+   "comm": {
+    "kind": "full",
+    "rounds": 30,
+    "params_down_per_client": 4322,
+    "params_up_per_client": 4322,
+    "bytes_down_per_round": 207456,
+    "bytes_up_per_round": 207456,
+    "MB_per_round": 0.414912,
+    "total_MB": 12.44736
+   },
+   "mia": {
+    "auc_mean": 0.4993000154693921,
+    "acc_mean": 0.5027313898065388,
+    "adv_mean": 0.005462779613077368,
+    "auc": [
+     0.5002962946891785,
+     0.4915020167827606,
+     0.5079557299613953,
+     0.5019398927688599,
+     0.5215230584144592,
+     0.4739578068256378,
+     0.4791390299797058,
+     0.5042963027954102,
+     0.4727404713630676,
+     0.4761744439601898,
+     0.5589850544929504,
+     0.5030900835990906
+    ]
+   },
+   "group": {
+    "pooled": {
+     "dp_gap": 0.15138147966859827,
+     "eo_gap": 0.19595570226131054
+    },
+    "per_client": [
+     {
+      "dp_gap": 0.05296052631578947,
+      "eo_gap": NaN
+     },
+     {
+      "dp_gap": 0.36528491219687015,
+      "eo_gap": 0.35511295688286837
+     },
+     {
+      "dp_gap": 0.31460265502818696,
+      "eo_gap": 0.29400000000000004
+     },
+     {
+      "dp_gap": 0.12455378964051367,
+      "eo_gap": 0.3084415584415584
+     },
+     {
+      "dp_gap": 0.1843846107000396,
+      "eo_gap": 0.26006493506493505
+     },
+     {
+      "dp_gap": 0.012131501229066085,
+      "eo_gap": 0.033333333333333326
+     },
+     {
+      "dp_gap": 0.058823529411764705,
+      "eo_gap": NaN
+     },
+     {
+      "dp_gap": 0.0335041761579347,
+      "eo_gap": NaN
+     },
+     {
+      "dp_gap": 0.025210084033613446,
+      "eo_gap": NaN
+     },
+     {
+      "dp_gap": 0.10752688172043011,
+      "eo_gap": NaN
+     },
+     {
+      "dp_gap": 0.06699173203307186,
+      "eo_gap": 0.0301659125188537
+     },
+     {
+      "dp_gap": 0.11784511784511784,
+      "eo_gap": 0.12142857142857144
+     }
+    ],
+    "dp_gap_mean": 0.12198495969269989,
+    "eo_gap_mean": 0.20036389538144572
+   },
+   "global": true
+  },
+  "finetune": {
+   "acc_test": [
+    0.7890365123748779,
+    0.7860116362571716,
+    0.7702590227127075,
+    0.8907942175865173,
+    0.8103607892990112,
+    0.9625390768051147,
+    0.8973063826560974,
+    0.7753779292106628,
+    0.9535452723503113,
+    0.8716216683387756,
+    0.7253521084785461,
+    0.7435897588729858
+   ],
+   "summary": {
+    "mean": 0.8313161979118983,
+    "worst10": 0.734470933675766,
+    "std": 0.07731798519041766,
+    "var": 0.0059780708339056444,
+    "jain": 0.9914239368243658,
+    "min": 0.7253521084785461,
+    "max": 0.9625390768051147,
+    "k": 12
+   },
+   "comm": {
+    "kind": "full",
+    "rounds": 27,
+    "params_down_per_client": 4322,
+    "params_up_per_client": 4322,
+    "bytes_down_per_round": 207456,
+    "bytes_up_per_round": 207456,
+    "MB_per_round": 0.414912,
+    "total_MB": 11.202624
+   },
+   "mia": {
+    "auc_mean": 0.5002379541595777,
+    "acc_mean": 0.5082616102834422,
+    "adv_mean": 0.016523220566884277,
+    "auc": [
+     0.4914201498031616,
+     0.4892190098762512,
+     0.5156583786010742,
+     0.4915624260902405,
+     0.5160163044929504,
+     0.48649734258651733,
+     0.46932142972946167,
+     0.5357584357261658,
+     0.4847472310066223,
+     0.47804054617881775,
+     0.5524511337280273,
+     0.4921630620956421
+    ]
+   },
+   "group": {
+    "pooled": {
+     "dp_gap": 0.1799093337002542,
+     "eo_gap": 0.20595919203690843
+    },
+    "per_client": [
+     {
+      "dp_gap": 0.03015350877192982,
+      "eo_gap": NaN
+     },
+     {
+      "dp_gap": 0.4509556803249313,
+      "eo_gap": 0.3751821008458176
+     },
+     {
+      "dp_gap": 0.518427592895678,
+      "eo_gap": 0.4336363636363636
+     },
+     {
+      "dp_gap": 0.08579829069956897,
+      "eo_gap": 0.22402597402597405
+     },
+     {
+      "dp_gap": 0.23364087573460005,
+      "eo_gap": 0.34935064935064936
+     },
+     {
+      "dp_gap": 0.0030328753072665212,
+      "eo_gap": 0.016666666666666663
+     },
+     {
+      "dp_gap": 0.01411764705882353,
+      "eo_gap": NaN
+     },
+     {
+      "dp_gap": 0.008447228549734245,
+      "eo_gap": NaN
+     },
+     {
+      "dp_gap": 0.008403361344537815,
+      "eo_gap": NaN
+     },
+     {
+      "dp_gap": 0.007168458781362007,
+      "eo_gap": NaN
+     },
+     {
+      "dp_gap": 0.1586813652745389,
+      "eo_gap": 0.12368024132730016
+     },
+     {
+      "dp_gap": 0.06846240179573512,
+      "eo_gap": 0.03214285714285714
+     }
+    ],
+    "dp_gap_mean": 0.13227410721155886,
+    "eo_gap_mean": 0.2220978361422326
+   },
+   "note": "branch after round 27; 30 local steps"
+  }
+ },
+ "curves": {
+  "round": [
+   10,
+   20,
+   30
+  ],
+  "val_mean": [
+   0.7804600745439529,
+   0.8069304724534353,
+   0.8373319953680038
+  ],
+  "val_worst10": [
+   0.5420800745487213,
+   0.6213028430938721,
+   0.7497565150260925
+  ]
+ },
+ "cost": {
+  "time_total_s": 19.151985299991793,
+  "time_train_s": 15.104579799968633,
+  "time_per_round_s": 0.5034859933322877,
+  "rounds": 30,
+  "peak_gpu_MB": 28.10595703125,
+  "device": "cuda"
+ },
+ "versions": {
+  "python": "3.12.10",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "torch": "2.11.0+cu128",
+  "cuda_available": true,
+  "cuda_version": "12.8",
+  "numpy": "2.5.2",
+  "opacus": "1.6.0",
+  "flwr": "1.41.0",
+  "gpu": "NVIDIA GeForce GTX 1650"
+ },
+ "run_id": "adult__fedavg__eps2__s0",
+ "blocks": [
+  "Q5"
+ ]
+}

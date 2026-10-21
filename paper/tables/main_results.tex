@@ -1,0 +1,12 @@
+\begin{tabular}{lccccccc}
+\toprule
+Mechanism & Mean acc. (\%) & Worst-10\% (\%) & SD (pts) & Jain & Gain (pts) & MIA AUC & Comm. (MB) \\
+\midrule
+DP-FedAvg (global) & 27.2 $\pm$ 1.7 & 12.1 $\pm$ 6.2 & 10.5 $\pm$ 3.9 & 0.865 $\pm$ 0.084 & 0 (ref.) & 0.500 $\pm$ 0.002 & 905 \\
+Fine-tuning & 51.8 $\pm$ 0.9 & 36.2 $\pm$ 2.0 & 11.9 $\pm$ 0.5 & 0.950 $\pm$ 0.005 & 24.6 $\pm$ 0.8 & 0.505 $\pm$ 0.003 & 814 \\
+Local only & 56.2 $\pm$ 0.6 & 38.1 $\pm$ 1.4 & 11.4 $\pm$ 0.1 & 0.960 $\pm$ 0.001 & 29.0 $\pm$ 1.1 & 0.506 $\pm$ 0.002 & 0 \\
+Per-FedAvg & 49.9 $\pm$ 0.8 & 32.8 $\pm$ 2.1 & 12.4 $\pm$ 0.5 & 0.942 $\pm$ 0.006 & 22.7 $\pm$ 1.0 & 0.504 $\pm$ 0.003 & 905 \\
+Clustered (IFCA) & 42.8 $\pm$ 2.7 & 24.0 $\pm$ 5.3 & 10.7 $\pm$ 1.0 & 0.940 $\pm$ 0.016 & 15.6 $\pm$ 2.1 & 0.505 $\pm$ 0.005 & 1809 \\
+FedPer & 54.1 $\pm$ 0.4 & 38.1 $\pm$ 0.8 & 11.2 $\pm$ 0.1 & 0.959 $\pm$ 0.000 & 26.8 $\pm$ 1.5 & 0.504 $\pm$ 0.002 & 896 \\
+\bottomrule
+\end{tabular}

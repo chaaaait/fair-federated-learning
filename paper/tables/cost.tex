@@ -1,0 +1,13 @@
+\begin{tabular}{lcccccc}
+\toprule
+Mechanism & MB/round & Total MB & s/round (no DP) & s/round (DP) & DP overhead & Peak GPU (MB) \\
+\midrule
+DP-FedAvg (global) & 22.6 & 905 & 5.8 & 9.3 & 1.6$\times$ & 642 \\
+Fine-tuning & 22.6 & 814 & 5.8 & 9.3 & 1.6$\times$ & 642 \\
+Local only & 0.0 & 0 & 5.4 & 9.5 & 1.8$\times$ & 641 \\
+Per-FedAvg & 22.6 & 905 & 5.4 & 9.4 & 1.7$\times$ & 641 \\
+Clustered (IFCA) & 45.2 & 1809 & 11.2 & 15.4 & 1.4$\times$ & 632 \\
+FedPer & 22.4 & 896 & 5.4 & 9.5 & 1.8$\times$ & 641 \\
+q-FFL, q=1 & 22.6 & 905 & 7.4 & 11.4 & 1.5$\times$ & 631 \\
+\bottomrule
+\end{tabular}

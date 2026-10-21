@@ -1,0 +1,509 @@
+{
+ "status": "ok",
+ "config": {
+  "dataset": "adult",
+  "data_dir": "data",
+  "num_clients": 20,
+  "dirichlet_alpha": 0.3,
+  "min_client_size": 300,
+  "adult_min_rows": 500,
+  "split": [
+   0.7,
+   0.1,
+   0.2
+  ],
+  "partition_seed": 42,
+  "max_examples": null,
+  "model": "mlp",
+  "method": "fedavg",
+  "aggregation": "mean",
+  "qffl_q": 0.0,
+  "ft_branch": true,
+  "ft_fraction": 0.1,
+  "rounds": 30,
+  "local_steps": 10,
+  "lr_local": 0.1,
+  "lr_server": 1.0,
+  "perfedavg_alpha": 0.03,
+  "perfedavg_beta": 0.05,
+  "perfedavg_adapt_steps": 5,
+  "ifca_k": 3,
+  "epsilon": null,
+  "delta": 1e-05,
+  "sample_rate": 0.03,
+  "clip_norm": 1.0,
+  "loss_noise_ratio": 30.0,
+  "loss_clip": 3.0,
+  "grad_backend": "opacus",
+  "max_physical_batch": 128,
+  "eval_every": 10,
+  "mia": true,
+  "seed": 2,
+  "device": "auto",
+  "run_id": "adult__fedavg__epsinf__s2",
+  "blocks": [
+   "Q5"
+  ]
+ },
+ "privacy": {
+  "private": false,
+  "epsilon_target": null,
+  "epsilon_spent": null,
+  "delta": 1e-05,
+  "sigma": 0.0,
+  "sigma_loss": 0.0,
+  "sample_rate": 0.03,
+  "clip_norm": 1.0,
+  "grad_queries_per_client": 300,
+  "loss_queries_per_client": 0,
+  "observed_queries_per_client": [
+   [
+    330,
+    0
+   ]
+  ]
+ },
+ "data": {
+  "dataset": "adult",
+  "n_total": 44976,
+  "num_features": 33,
+  "input_shape": [
+   33
+  ],
+  "num_classes": 2,
+  "num_clients": 12,
+  "clients": [
+   {
+    "name": "Craft-repair",
+    "n": 6020,
+    "n_train": 4214,
+    "n_val": 602,
+    "n_test": 1204,
+    "class_hist": [
+     4665,
+     1355
+    ],
+    "female_frac": 0.05232558139534882,
+    "positive_rate": 0.22508305647840532
+   },
+   {
+    "name": "Prof-specialty",
+    "n": 6008,
+    "n_train": 4206,
+    "n_val": 601,
+    "n_test": 1201,
+    "class_hist": [
+     3304,
+     2704
+    ],
+    "female_frac": 0.3666777629826897,
+    "positive_rate": 0.45006657789613846
+   },
+   {
+    "name": "Exec-managerial",
+    "n": 5984,
+    "n_train": 4189,
+    "n_val": 598,
+    "n_test": 1197,
+    "class_hist": [
+     3117,
+     2867
+    ],
+    "female_frac": 0.28810160427807485,
+    "positive_rate": 0.47911096256684493
+   },
+   {
+    "name": "Adm-clerical",
+    "n": 5540,
+    "n_train": 3878,
+    "n_val": 554,
+    "n_test": 1108,
+    "class_hist": [
+     4784,
+     756
+    ],
+    "female_frac": 0.6732851985559567,
+    "positive_rate": 0.13646209386281588
+   },
+   {
+    "name": "Sales",
+    "n": 5408,
+    "n_train": 3786,
+    "n_val": 541,
+    "n_test": 1081,
+    "class_hist": [
+     3953,
+     1455
+    ],
+    "female_frac": 0.35521449704142016,
+    "positive_rate": 0.26904585798816566
+   },
+   {
+    "name": "Other-service",
+    "n": 4808,
+    "n_train": 3366,
+    "n_val": 481,
+    "n_test": 961,
+    "class_hist": [
+     4612,
+     196
+    ],
+    "female_frac": 0.5495008319467554,
+    "positive_rate": 0.04076539101497504
+   },
+   {
+    "name": "Machine-op-inspct",
+    "n": 2970,
+    "n_train": 2079,
+    "n_val": 297,
+    "n_test": 594,
+    "class_hist": [
+     2605,
+     365
+    ],
+    "female_frac": 0.267003367003367,
+    "positive_rate": 0.12289562289562289
+   },
+   {
+    "name": "Transport-moving",
+    "n": 2316,
+    "n_train": 1621,
+    "n_val": 232,
+    "n_test": 463,
+    "class_hist": [
+     1838,
+     478
+    ],
+    "female_frac": 0.05397236614853196,
+    "positive_rate": 0.20639032815198619
+   },
+   {
+    "name": "Handlers-cleaners",
+    "n": 2046,
+    "n_train": 1432,
+    "n_val": 205,
+    "n_test": 409,
+    "class_hist": [
+     1911,
+     135
+    ],
+    "female_frac": 0.12365591397849462,
+    "positive_rate": 0.06598240469208211
+   },
+   {
+    "name": "Farming-fishing",
+    "n": 1480,
+    "n_train": 1036,
+    "n_val": 148,
+    "n_test": 296,
+    "class_hist": [
+     1308,
+     172
+    ],
+    "female_frac": 0.06418918918918914,
+    "positive_rate": 0.11621621621621622
+   },
+   {
+    "name": "Tech-support",
+    "n": 1420,
+    "n_train": 994,
+    "n_val": 142,
+    "n_test": 284,
+    "class_hist": [
+     1009,
+     411
+    ],
+    "female_frac": 0.39014084507042257,
+    "positive_rate": 0.28943661971830986
+   },
+   {
+    "name": "Protective-serv",
+    "n": 976,
+    "n_train": 683,
+    "n_val": 98,
+    "n_test": 195,
+    "class_hist": [
+     669,
+     307
+    ],
+    "female_frac": 0.125,
+    "positive_rate": 0.3145491803278688
+   }
+  ]
+ },
+ "model": {
+  "name": "mlp",
+  "params": 4322,
+  "head_params": 66
+ },
+ "views": {
+  "fedavg": {
+   "acc_test": [
+    0.7990033030509949,
+    0.7935054302215576,
+    0.7602339386940002,
+    0.8971118927001953,
+    0.8159111738204956,
+    0.9521332383155823,
+    0.8956228494644165,
+    0.779697597026825,
+    0.9339853525161743,
+    0.8547297716140747,
+    0.7535210847854614,
+    0.7794871926307678
+   ],
+   "summary": {
+    "mean": 0.8345785687367121,
+    "worst10": 0.7568775117397308,
+    "std": 0.06657651935985569,
+    "var": 0.004432432930073239,
+    "jain": 0.9936765692666885,
+    "min": 0.7535210847854614,
+    "max": 0.9521332383155823,
+    "k": 12
+   },
+   "comm": {
+    "kind": "full",
+    "rounds": 30,
+    "params_down_per_client": 4322,
+    "params_up_per_client": 4322,
+    "bytes_down_per_round": 207456,
+    "bytes_up_per_round": 207456,
+    "MB_per_round": 0.414912,
+    "total_MB": 12.44736
+   },
+   "mia": {
+    "auc_mean": 0.5005154783527056,
+    "acc_mean": 0.5034006792084059,
+    "adv_mean": 0.006801358416811676,
+    "auc": [
+     0.48728904128074646,
+     0.4777703881263733,
+     0.4982115626335144,
+     0.4923863410949707,
+     0.5071284174919128,
+     0.4769923985004425,
+     0.4605284035205841,
+     0.5263400673866272,
+     0.5180414915084839,
+     0.5153738856315613,
+     0.5675833225250244,
+     0.47854042053222656
+    ]
+   },
+   "group": {
+    "pooled": {
+     "dp_gap": 0.2039185909335956,
+     "eo_gap": 0.18183011516259473
+    },
+    "per_client": [
+     {
+      "dp_gap": 0.1143640350877193,
+      "eo_gap": NaN
+     },
+     {
+      "dp_gap": 0.4097568988173456,
+      "eo_gap": 0.3083429366615207
+     },
+     {
+      "dp_gap": 0.3945262775050009,
+      "eo_gap": 0.29690909090909084
+     },
+     {
+      "dp_gap": 0.1807799979263253,
+      "eo_gap": 0.24025974025974028
+     },
+     {
+      "dp_gap": 0.2821853780335556,
+      "eo_gap": 0.3165584415584416
+     },
+     {
+      "dp_gap": 0.05521070967513749,
+      "eo_gap": 0.3666666666666667
+     },
+     {
+      "dp_gap": 0.09290636964845109,
+      "eo_gap": NaN
+     },
+     {
+      "dp_gap": 0.07678435839028094,
+      "eo_gap": NaN
+     },
+     {
+      "dp_gap": 0.058823529411764705,
+      "eo_gap": NaN
+     },
+     {
+      "dp_gap": 0.14695340501792115,
+      "eo_gap": NaN
+     },
+     {
+      "dp_gap": 0.19980920076319697,
+      "eo_gap": 0.02413273001508298
+     },
+     {
+      "dp_gap": 0.14927048260381592,
+      "eo_gap": 0.04642857142857143
+     }
+    ],
+    "dp_gap_mean": 0.18011422024004295,
+    "eo_gap_mean": 0.2284711682141592
+   },
+   "global": true
+  },
+  "finetune": {
+   "acc_test": [
+    0.7965115904808044,
+    0.7801831960678101,
+    0.7894737124443054,
+    0.8935018181800842,
+    0.8177613615989685,
+    0.9625390768051147,
+    0.8989898562431335,
+    0.781857430934906,
+    0.9437653422355652,
+    0.875,
+    0.73591548204422,
+    0.7846153974533081
+   ],
+   "summary": {
+    "mean": 0.8383428553740183,
+    "worst10": 0.758049339056015,
+    "std": 0.07018767681724972,
+    "var": 0.004926309977002693,
+    "jain": 0.9930394285976417,
+    "min": 0.73591548204422,
+    "max": 0.9625390768051147,
+    "k": 12
+   },
+   "comm": {
+    "kind": "full",
+    "rounds": 27,
+    "params_down_per_client": 4322,
+    "params_up_per_client": 4322,
+    "bytes_down_per_round": 207456,
+    "bytes_up_per_round": 207456,
+    "MB_per_round": 0.414912,
+    "total_MB": 11.202624
+   },
+   "mia": {
+    "auc_mean": 0.4978174145023028,
+    "acc_mean": 0.5042894841013196,
+    "adv_mean": 0.008578968202638962,
+    "auc": [
+     0.5021699070930481,
+     0.4915744662284851,
+     0.49173790216445923,
+     0.480657160282135,
+     0.5074318051338196,
+     0.4756188690662384,
+     0.4766208529472351,
+     0.49361148476600647,
+     0.48554527759552,
+     0.5009130835533142,
+     0.5964094400405884,
+     0.47151872515678406
+    ]
+   },
+   "group": {
+    "pooled": {
+     "dp_gap": 0.20431530533757097,
+     "eo_gap": 0.11842345385332054
+    },
+    "per_client": [
+     {
+      "dp_gap": 0.08892543859649123,
+      "eo_gap": NaN
+     },
+     {
+      "dp_gap": 0.4450304623103572,
+      "eo_gap": 0.23800308756060962
+     },
+     {
+      "dp_gap": 0.4908771291750015,
+      "eo_gap": 0.26836363636363636
+     },
+     {
+      "dp_gap": 0.1763512212462785,
+      "eo_gap": 0.2662337662337662
+     },
+     {
+      "dp_gap": 0.2793763892695107,
+      "eo_gap": 0.3165584415584416
+     },
+     {
+      "dp_gap": 0.0030328753072665212,
+      "eo_gap": 0.016666666666666663
+     },
+     {
+      "dp_gap": 0.02588235294117647,
+      "eo_gap": NaN
+     },
+     {
+      "dp_gap": 0.010725132877752473,
+      "eo_gap": NaN
+     },
+     {
+      "dp_gap": 0.03081232492997199,
+      "eo_gap": NaN
+     },
+     {
+      "dp_gap": 0.04659498207885305,
+      "eo_gap": NaN
+     },
+     {
+      "dp_gap": 0.2728429086283655,
+      "eo_gap": 0.07541478129713425
+     },
+     {
+      "dp_gap": 0.1936026936026936,
+      "eo_gap": 0.0071428571428571175
+     }
+    ],
+    "dp_gap_mean": 0.1720044925803099,
+    "eo_gap_mean": 0.16976903383187308
+   },
+   "note": "branch after round 27; 30 local steps"
+  }
+ },
+ "curves": {
+  "round": [
+   10,
+   20,
+   30
+  ],
+  "val_mean": [
+   0.8432891716559728,
+   0.8394316683212916,
+   0.8443242112795512
+  ],
+  "val_worst10": [
+   0.7648025155067444,
+   0.7756470441818237,
+   0.7856345772743225
+  ]
+ },
+ "cost": {
+  "time_total_s": 9.222306600000593,
+  "time_train_s": 8.061102000036044,
+  "time_per_round_s": 0.26870340000120146,
+  "rounds": 30,
+  "peak_gpu_MB": 24.5859375,
+  "device": "cuda"
+ },
+ "versions": {
+  "python": "3.12.10",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "torch": "2.11.0+cu128",
+  "cuda_available": true,
+  "cuda_version": "12.8",
+  "numpy": "2.5.2",
+  "opacus": "1.6.0",
+  "flwr": "1.41.0",
+  "gpu": "NVIDIA GeForce GTX 1650"
+ },
+ "run_id": "adult__fedavg__epsinf__s2",
+ "blocks": [
+  "Q5"
+ ]
+}
