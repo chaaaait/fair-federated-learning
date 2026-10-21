@@ -1,7 +1,7 @@
 # T16 / P20 — Project Progress Tracker
 **Single source of truth across all chats in this Project. Read this first. Update it whenever progress is made.**
 
-Last updated: 2026-10-22 00:15 (Claude Code — P2 drafted)
+Last updated: 2026-10-22 00:35 (Claude Code — S4 done, v1.0 pushed)
 
 ---
 
@@ -22,11 +22,12 @@ Last updated: 2026-10-22 00:15 (Claude Code — P2 drafted)
 - **Key results (CIFAR-10, ε₀ = 2, mean over 3 seeds):** DP-FedAvg 27.2% mean / 12.1% worst-10% → FedPer 54.1 / 38.1, Local-only 56.2 / 38.1, Fine-tuning 51.8 / 36.2, Per-FedAvg 49.9 / 32.8, IFCA 42.8 / 24.0. Non-private FedAvg 40.3%.
 - **Failure cases to report:** q-FFL stalls under DP (12.5%; curve flat) · Per-FedAvg on Adult at ε₀ collapses to the majority class (gaps = 0 trivially) · local-only ≥ every federated mechanism under DP · loss-threshold MIA ≈ 0.50 AUC everywhere (weak attack).
 - **P2 ✅ drafted:** §V Results, §VI Discussion (recommendation rule, why mechanisms differ, limitations), §VII Conclusion, abstract sentence, AI disclosure updated. No `	odo` left. **Not compiled locally** (MiKTeX lacks IEEEtran) → `paper_overleaf.zip` for Overleaf; check page count ≤ 10 there.
-- **Next:** S4 GitHub (Chaitanya creates the empty repo; first push needs his OK) · Chaitanya: Overleaf check + own-voice pass of §VI–VII.
+- **S4 ✅:** public repo **github.com/chaaaait/fair-federated-learning** (renamed from t16-pfl-dp-fairness; paper link updated), `main` pushed, tag `v1.0`.
+- **Next (Chaitanya):** Overleaf upload of `paper_overleaf.zip` → check it compiles, ≤ 10 pages · own-voice pass of §VI–VII + Turnitin · deck in a claude.ai chat · PDF to Dr Kalaavathi B · demo dry runs (Wi-Fi off) + backup video.
 - Project folder: `C:\Users\Chaitanya\T16_P20_handoff_final\T16_P20`.
 
 ## 2. Need from Chaitanya
-- Create the empty public GitHub repo `fair-federated-learning` (owner chaaaait, no README) and OK the first push · upload `paper_overleaf.zip` to Overleaf and check it compiles.
+- Overleaf compile + page check · own-voice pass · deck · PDF to faculty · demo rehearsal (GPU 103 s, CPU fallback 149 s).
 
 ---
 
@@ -113,7 +114,7 @@ Old synthetic finding (ε = 0.3: fine-tuning worse than DP global) → re-tested
 | 9 | S3: aggregate, Gate 3, figures (sweep hard stop 19:00) | Claude Code | Tue 19:45 | ✅ Thu 00:05 — full queue, Gate 3 clean |
 | 10 | P2: Results, Discussion, Conclusion, abstract | Claude Code | Tue 22:00 | ✅ Thu 00:15 — drafted from results only; not yet compiled (Overleaf) |
 | 11 | Turnitin + own-voice pass | Chaitanya | Tue night | ⬜ |
-| 12 | S4: GitHub repo + README final + v1.0 | Claude Code + Chaitanya | Tue 22:30 | ⬜ |
+| 12 | S4: GitHub repo + README final + v1.0 | Claude Code + Chaitanya | Tue 22:30 | ✅ Thu 00:35 — fair-federated-learning, v1.0 |
 | 13 | D1: final deck | claude.ai chat | Tue 23:00 | ⬜ |
 | 14 | PDF emailed to faculty | Chaitanya | Tue 23:00 | ⬜ |
 | 15 | Demo dry runs + backup video | Chaitanya | Tue eve / Wed AM | ⬜ |
@@ -122,6 +123,7 @@ Old synthetic finding (ε = 0.3: fine-tuning worse than DP global) → re-tested
 ---
 
 ## 10. Changelog (newest first)
+- 2026-10-22 00:35 — S4 done: repo renamed to `fair-federated-learning` (Chaitanya's choice; paper + docs updated), README with results table + one command per figure, main pushed, v1.0 tagged.
 - 2026-10-22 00:15 — P2 drafted from results CSV/JSON only; every number cross-checked. GPU demo timed: 103 s for 5 rounds. figures.py: recommended table now shows only the main partition (α=1 check moved to text). paper_overleaf.zip rebuilt.
 - 2026-10-22 00:05 — S3 done: 147/147 runs, Gate 3 clean, figures/tables built, setup.tex timing filled (6.3–10.8 min per DP run; 147 runs ≈ 14 h). q-FFL-under-DP stall checked: code matches q-FedAvg; DP noise inflates the update norm in its step normaliser → reported as a failure case.
 - 2026-10-21 09:45 — S2 done: Flower demo verified on native Windows (CPU), env.txt + requirements-lock.txt, README note. Sweep launched 09:34 (147 runs, 40 rounds); first run 282 s. CIFAR Gate 1: all PASS except time_budget (accepted — no time cap now).
