@@ -1,7 +1,7 @@
 # T16 / P20 — Project Progress Tracker
 **Single source of truth across all chats in this Project. Read this first. Update it whenever progress is made.**
 
-Last updated: 2026-10-21 09:45 (Claude Code — S2 done, sweep running)
+Last updated: 2026-10-22 00:05 (Claude Code — S3 done)
 
 ---
 
@@ -18,15 +18,14 @@ Last updated: 2026-10-21 09:45 (Claude Code — S2 done, sweep running)
 ---
 
 ## 1. Now
-- **Review date moved later (Chaitanya, 20 Oct night)** — RE-PLAN times in CLAUDE.md no longer apply; finish ASAP. **Full queue, no cuts, ε₀ = 2 (locked).**
-- **Project folder is `C:\Users\Chaitanya\T16_P20_handoff_final\T16_P20`** (not `C:\Users\Chaitanya\T16_P20` as in CLAUDE.md).
-- **Sweep running** (full queue, 147 runs, **40 rounds**) in Chaitanya's PowerShell since **Wed 21 Oct 09:34**. First run (non-private FedAvg) took 282 s. Monitor: `scripts\status.py`, `logs\sweep.log`.
-- **S1 ✅ · S2 ✅** — Flower demo works on native Windows (CPU: CIFAR-10 subset, 5 rounds, 149 s). env.txt + requirements-lock.txt written.
-- **Next:** when the sweep finishes → S3 (aggregate, Gate 3, figures, setup.tex timing) → P2 → S4.
-- Journal: parked (Chaitanya decides later).
+- **Sweep finished: 147/147 runs, 0 failed** (Wed 09:34 → 23:22). **S3 ✅**: aggregate, Gate 3 (no anomalies), 7 figures + 4 tables, setup.tex fully filled.
+- **Key results (CIFAR-10, ε₀ = 2, mean over 3 seeds):** DP-FedAvg 27.2% mean / 12.1% worst-10% → FedPer 54.1 / 38.1, Local-only 56.2 / 38.1, Fine-tuning 51.8 / 36.2, Per-FedAvg 49.9 / 32.8, IFCA 42.8 / 24.0. Non-private FedAvg 40.3%.
+- **Failure cases to report:** q-FFL stalls under DP (12.5%; curve flat) · Per-FedAvg on Adult at ε₀ collapses to the majority class (gaps = 0 trivially) · local-only ≥ every federated mechanism under DP · loss-threshold MIA ≈ 0.50 AUC everywhere (weak attack).
+- **Next:** P2 (Results/Discussion/Conclusion/abstract) → S4 GitHub (Chaitanya creates the empty repo; first push needs his OK).
+- Project folder: `C:\Users\Chaitanya\T16_P20_handoff_final\T16_P20`.
 
 ## 2. Need from Chaitanya
-- Keep the laptop plugged in, sleep off, and the sweep's PowerShell window open until it finishes (est. 14–16 h at 40 rounds — a scheduling guess, not a measured number) · tell Claude Code when it ends (or just say "continue").
+- Create the empty public GitHub repo `t16-pfl-dp-fairness` (owner chaaaait, no README) and OK the first push · upload `paper_overleaf.zip` to Overleaf and check it compiles.
 
 ---
 
@@ -110,7 +109,7 @@ Old synthetic finding (ε = 0.3: fine-tuning worse than DP global) → re-tested
 | 6 | S1: laptop env, data, Gate 1, launch sweep | Claude Code + Chaitanya | Tue 09:30 | ✅ (sweep launched Wed 09:34, 40 rounds) env ✅ tests ✅ data ✅ (CIFAR-10 60,000 imgs, 20 clients, sizes 771/2,696/5,484 · Adult 44,976 rows (45,222 after missing removed), 12 occupation clients, 976/3,889/6,020) · Adult Gate 1 PASS (~0.4 min/run) · CIFAR Gate 1: all checks PASS except **time_budget** (DP run 7.2–12.0 min at 40 rounds; IFCA slowest; peak GPU ~0.84 GB) → full queue ≈ 14–16 h at 40 rounds; **rounds 40 vs 30 = Chaitanya's call** · setup.tex filled except timing + demo sentence |
 | 7 | S2: Flower demo built ✅ (Linux) → test on Windows; env.txt, lock file | Claude Code | Tue day | ✅ Windows CPU: synthetic 3 rounds (ε→4.00, 61 s) + CIFAR-10 subset 5 rounds (ε→4.00, Jain 0.964, 149 s); env.txt + requirements-lock.txt; README CIFAR-SSL note; setup.tex Flower sentence kept |
 | 8 | Gate 2 (ε₀) | Chaitanya + Claude Code | Tue ~12:00 | ✅ ε₀ = 2 (Chaitanya, 20 Oct) |
-| 9 | S3: aggregate, Gate 3, figures (sweep hard stop 19:00) | Claude Code | Tue 19:45 | ⬜ |
+| 9 | S3: aggregate, Gate 3, figures (sweep hard stop 19:00) | Claude Code | Tue 19:45 | ✅ Thu 00:05 — full queue, Gate 3 clean |
 | 10 | P2: Results, Discussion, Conclusion, abstract | Claude Code | Tue 22:00 | ⬜ |
 | 11 | Turnitin + own-voice pass | Chaitanya | Tue night | ⬜ |
 | 12 | S4: GitHub repo + README final + v1.0 | Claude Code + Chaitanya | Tue 22:30 | ⬜ |
@@ -122,6 +121,7 @@ Old synthetic finding (ε = 0.3: fine-tuning worse than DP global) → re-tested
 ---
 
 ## 10. Changelog (newest first)
+- 2026-10-22 00:05 — S3 done: 147/147 runs, Gate 3 clean, figures/tables built, setup.tex timing filled (6.3–10.8 min per DP run; 147 runs ≈ 14 h). q-FFL-under-DP stall checked: code matches q-FedAvg; DP noise inflates the update norm in its step normaliser → reported as a failure case.
 - 2026-10-21 09:45 — S2 done: Flower demo verified on native Windows (CPU), env.txt + requirements-lock.txt, README note. Sweep launched 09:34 (147 runs, 40 rounds); first run 282 s. CIFAR Gate 1: all PASS except time_budget (accepted — no time cap now).
 - 2026-10-21 01:20 — Claude Code S1 checkpoint: venv/CUDA torch OK, CPU tests pass, data downloaded (Python SSL check failed on the CIFAR mirror → fetched with Windows curl, md5 verified), Adult Gate 1 PASS, setup.tex dataset numbers filled. Review moved later; full queue with ε₀ = 2.
 - 2026-10-20 01:20 — Re-plan: Sat–Mon lost, nothing ran. Everything moved to **Tue 20 Oct** (S1 08:00 → sweep 09:30 → hard stop 19:00 → results/paper/GitHub/deck → PDF 23:00). Pre-approved cut rules added to CLAUDE.md. Folder access from chat blocked → Chaitanya extracts the zip. Final zip rebuilt.
