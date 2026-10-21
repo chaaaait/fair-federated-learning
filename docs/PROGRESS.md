@@ -26,7 +26,7 @@ Last updated: 2026-10-22 00:15 (Claude Code — P2 drafted)
 - Project folder: `C:\Users\Chaitanya\T16_P20_handoff_final\T16_P20`.
 
 ## 2. Need from Chaitanya
-- Create the empty public GitHub repo `t16-pfl-dp-fairness` (owner chaaaait, no README) and OK the first push · upload `paper_overleaf.zip` to Overleaf and check it compiles.
+- Create the empty public GitHub repo `fair-federated-learning` (owner chaaaait, no README) and OK the first push · upload `paper_overleaf.zip` to Overleaf and check it compiles.
 
 ---
 
@@ -46,7 +46,7 @@ Last updated: 2026-10-22 00:15 (Claude Code — P2 drafted)
 | Review 1 | 24–31 Aug, 40 marks — ✅ went well. Held in a cabin, no projector |
 | Final Review | **Wed 21 Oct 2026**, cabin, **10–15 min max**, feedback → changes may be requested afterwards |
 | Format | **IEEE journal template** (IEEEtran, two-column; compile on Overleaf) + final PPT |
-| GitHub | `chaaaait` · repo `t16-pfl-dp-fairness` (public, to create Tue ~22:00) · git installed |
+| GitHub | `chaaaait` · repo `fair-federated-learning` (public, to create Tue ~22:00) · git installed |
 | Turnitin targets | AI < 20%; similarity as low as possible. Chaitanya does an own-voice pass |
 | IEEE AI policy | AI-generated content must be disclosed in the Acknowledgment (system, sections, extent). Placeholder in paper |
 | Laptop | Windows x64, **GTX 1650 4 GB**, driver 581.42 (CUDA 13.0); PowerShell |

@@ -120,8 +120,8 @@ following the TODO notes inside those files. Use only numbers from `results/summ
 and limitations. Keep it ≤ 10 pages. Re-zip for Overleaf.
 
 ### S4 — GitHub (Tue ~22:00)
-Chaitanya creates an empty public repo `t16-pfl-dp-fairness` at github.com/new (owner `chaaaait`, no README).
-Then: `git remote add origin https://github.com/chaaaait/t16-pfl-dp-fairness.git; git branch -M main; git push -u origin main`
+Chaitanya creates an empty public repo `fair-federated-learning` at github.com/new (owner `chaaaait`, no README).
+Then: `git remote add origin https://github.com/chaaaait/fair-federated-learning.git; git branch -M main; git push -u origin main`
 (he signs in when Git Credential Manager pops up). Finalise README (results summary, one command per figure), tag `v1.0`.
 
 ## Cut order if behind

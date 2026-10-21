@@ -41,7 +41,7 @@ Owners: **C** = Chaitanya · **Cl** = Claude (claude.ai chat) · **CC** = Claude
 | 2 | References | **Add** method/dataset/tool citations + relevant recent papers; keep most references recent (≥ 2021) |
 | 3 | Authors | Chaitanya Patil · Aprark · Tanishq Jain · **Dr. Kalaavathi B** (Professor Grade 2, Dept of IoT, School of Computer Science and Engineering, VIT; kalaavathi.b@vit.ac.in). Corresponding: Chaitanya |
 | 4 | Review format | **Cabin, 10–15 min max**, feedback given, changes may be requested after → present from the laptop |
-| 5 | GitHub | `chaaaait` · git installed · repo `t16-pfl-dp-fairness` (public) |
+| 5 | GitHub | `chaaaait` · git installed · repo `fair-federated-learning` (public) |
 
 ---
 
@@ -121,7 +121,7 @@ Code + tests ✅ · Flower demo ✅ (Linux) · CLAUDE.md + README ✅ · referen
 | 09:00–12:30 | CC | **P2** | §V Results · §VI Discussion · §VII Conclusion · abstract → **paper v1.0** (Overleaf zip) |
 | 12:30–13:30 | C | — | Compile on Overleaf; read it all; mark issues |
 | 13:30–14:30 | CC | P2 | Fixes → v1.1 · **C runs Turnitin** |
-| 13:30–15:00 | CC + C | **S4** | GitHub repo (C creates `t16-pfl-dp-fairness` at github.com/new) → push · README final · tag v1.0 |
+| 13:30–15:00 | CC + C | **S4** | GitHub repo (C creates `fair-federated-learning` at github.com/new) → push · README final · tag v1.0 |
 | 13:30–16:30 | Cl | **D1** | Final deck in a **claude.ai chat** in this Project (upload `paper/figures/*.png` + `results/summary_table.csv`) → .pptx + PDF |
 | 14:30–16:30 | C | — | Own-voice rewrite of Intro, Discussion, Conclusion (Turnitin AI flags); CC re-checks facts → v1.2 |
 | 15:00 | A / T | — | A: proofread v1.1 (labels, units, legends, captions, error bars) · T: clone repo, run the demo from the README on his laptop |
@@ -175,7 +175,7 @@ Code + tests ✅ · Flower demo ✅ (Linux) · CLAUDE.md + README ✅ · referen
 
 ## 8. 🖥️ Live demo + Git
 - **Demo (2–3 min, offline):** Flower SuperLink + 3 SuperNodes on localhost (HTTP) → 5 rounds of DP FedPer on a CIFAR-10 subset → per round: accuracy, worst client, ε spent, bytes sent → per-client table + Jain's index. Backup: recorded video.
-- **Git:** `github.com/chaaaait/t16-pfl-dp-fairness` · README (setup, versions, 1 command per figure) · pinned `requirements-lock.txt` · `env.txt` · MIT LICENSE · results CSV/JSON + figures · tag `v1.0`.
+- **Git:** `github.com/chaaaait/fair-federated-learning` · README (setup, versions, 1 command per figure) · pinned `requirements-lock.txt` · `env.txt` · MIT LICENSE · results CSV/JSON + figures · tag `v1.0`.
 
 ---
 
