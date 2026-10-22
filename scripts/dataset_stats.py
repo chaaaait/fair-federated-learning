@@ -32,7 +32,7 @@ CLASS_COLORS = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#008300"
 SOURCES = {
     "cifar10": ("CIFAR-10", "Krizhevsky (2009), Univ. of Toronto", "No formal licence; free research use with citation",
                 "32x32 RGB images, 3,072 values"),
-    "adult": ("Adult (Census Income)", "UCI ML Repository, Becker & Kohavi (1996)", "CC BY 4.0",
+    "adult": ("Adult (Census Income)", "UCI ML Repository, Becker \& Kohavi (1996)", "CC BY 4.0",
               "14 attributes -> 5 numeric + one-hot categorical"),
     "synthetic": ("Synthetic images", "generated (tests only)", "n/a", "16x16 RGB"),
     "synthetic_tab": ("Synthetic tabular", "generated (tests only)", "n/a", "12 numeric"),
