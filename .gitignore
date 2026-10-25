@@ -17,3 +17,8 @@ paper/*.synctex.gz
 .DS_Store
 Thumbs.db
 *.egg-info/
+
+# private planning notes (kept local, not published)
+CLAUDE.md
+docs/PLAN.md
+docs/PROGRESS.md
