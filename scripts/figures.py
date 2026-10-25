@@ -213,7 +213,7 @@ def fig_qffl(t, eps0):
         tag = "no DP" if np.isinf(eps) else f"ε = {eps0:g}"
         if len(g):
             ax.annotate(tag, (g["mean_mean"].iloc[-1] * 100, g["worst10_mean"].iloc[-1] * 100),
-                        textcoords="offset points", xytext=(6, -10), fontsize=7, color=INK2)
+                        textcoords="offset points", xytext=(6, 6), fontsize=7, color=INK2)
     ax.set_xlabel("mean client accuracy (%)")
     ax.set_ylabel("worst-10% client accuracy (%)")
     ax.set_title("q-FFL: worst-client gain vs mean-accuracy cost")
@@ -235,7 +235,10 @@ def fig_mia(t):
     fig, ax = plt.subplots(figsize=(COL, 2.5))
     line_panel(ax, g, views, "mia_auc", "membership-inference AUC", pct=False)
     ax.axhline(0.5, color=INK2, linewidth=0.8, linestyle="--")
-    ax.annotate("random guessing", (min(g.eps), 0.5), textcoords="offset points", xytext=(2, 3), fontsize=6.5, color=INK2)
+    lo, hi = ax.get_ylim()
+    ax.set_ylim(min(lo, 0.5 - 0.15 * (hi - lo)), hi)  # room under the 0.5 line for its label
+    ax.annotate("random guessing", (min(g.eps), 0.5), textcoords="offset points", xytext=(2, -3), va="top",
+                fontsize=6.5, color=INK2)
     ax.set_title("Measured leakage vs theoretical budget")
     ax.legend(frameon=False, fontsize=6.5, ncol=2)
     save(fig, "privacy_mia_vs_eps")
