@@ -29,6 +29,7 @@ DEFAULTS = {
     "method": "fedavg",              # fedavg | local | perfedavg | ifca | fedper
     "aggregation": "mean",           # mean | qffl
     "qffl_q": 0.0,
+    "qffl_L_scale": 1.0,             # q-FedAvg Lipschitz estimate L = scale / lr_local (1.0 = Li et al. default)
     "ft_branch": True,               # fedavg only: also produce the fine-tuning configuration (D10)
     "ft_fraction": 0.1,              # share of each client's step budget spent on local fine-tuning
     "rounds": 40,

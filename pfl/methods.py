@@ -143,8 +143,14 @@ class QFFLAgg:
 
 def _aggregator(ctx):
     if ctx.cfg["aggregation"] == "qffl":
-        return QFFLAgg(ctx.cfg["qffl_q"], 1.0 / ctx.lr)
+        return QFFLAgg(ctx.cfg["qffl_q"], ctx.cfg.get("qffl_L_scale", 1.0) / ctx.lr)
     return MeanAgg(ctx.cfg["lr_server"])
+
+
+def _qffl_suffix(cfg) -> str:
+    """View-name suffix for a non-default q-FFL constant L, so tuned runs never collide with the default ones."""
+    s = float(cfg.get("qffl_L_scale", 1.0))
+    return "" if s == 1.0 else f"_L{s:g}"
 
 
 # ----------------------------------------------------------------------------- methods
@@ -167,7 +173,7 @@ def run_fedavg(ctx: Ctx, w0: torch.Tensor) -> dict:
         ctx.round_times.append(ctx.sw.stop())
         if ctx.should_log(r):
             ctx.log_curve(r + 1, lambda i: w)
-    name = f"qffl_q{cfg['qffl_q']:g}" if qffl else "fedavg"
+    name = f"qffl_q{cfg['qffl_q']:g}{_qffl_suffix(cfg)}" if qffl else "fedavg"
     views = {name: {"vecs": [w] * ctx.K, "comm": ctx.comm("full", R, extra_up=1 if qffl else 0),
                     "global": True}}
     if ft:
@@ -276,7 +282,7 @@ def run_fedper(ctx: Ctx, w0: torch.Tensor) -> dict:
         ctx.round_times.append(ctx.sw.stop())
         if ctx.should_log(r):
             ctx.log_curve(r + 1, full)
-    name = f"fedper_qffl_q{cfg['qffl_q']:g}" if qffl else "fedper"
+    name = f"fedper_qffl_q{cfg['qffl_q']:g}{_qffl_suffix(cfg)}" if qffl else "fedper"
     return {name: {"vecs": [full(i) for i in range(ctx.K)],
                    "comm": ctx.comm("base", ctx.R, extra_up=1 if qffl else 0)}}
 

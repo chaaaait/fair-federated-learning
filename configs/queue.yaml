@@ -64,3 +64,40 @@ blocks:
       - {method: fedper, aggregation: qffl, qffl_q: 5}
       - {method: fedavg, dirichlet_alpha: 1.0}
       - {method: fedper, dirichlet_alpha: 1.0}
+
+  # ---- First-level review (Dr Kalaavathi B, 25 Oct 2026) ----------------------------------------------------
+  - name: Q8             # review item 2: tune the q-FedAvg constant L = s / lr (s = 1 is Q4); same 40 rounds
+    dataset: cifar10
+    eps: [eps0, inf]
+    runs:
+      - {method: fedavg, aggregation: qffl, qffl_q: 1, qffl_L_scale: 0.01}
+      - {method: fedavg, aggregation: qffl, qffl_q: 1, qffl_L_scale: 0.1}
+      - {method: fedavg, aggregation: qffl, qffl_q: 1, qffl_L_scale: 10}
+      - {method: fedavg, aggregation: qffl, qffl_q: 1, qffl_L_scale: 100}
+
+  - name: Q9             # review item 1: non-private baselines trained to convergence (5x the 40-round budget)
+    dataset: cifar10
+    eps: [inf]
+    runs:
+      - {method: fedavg, rounds: 200}
+      - {method: fedper, rounds: 200}
+      - {method: local, rounds: 200}
+      - {method: perfedavg, rounds: 200}
+      - {method: ifca, rounds: 200}
+
+  - name: Q10            # review item 1: Adult non-private baselines to convergence (Per-FedAvg still rising at 30)
+    dataset: adult
+    eps: [inf]
+    runs:
+      - {method: fedavg, rounds: 100}
+      - {method: local, rounds: 100}
+      - {method: perfedavg, rounds: 100}
+      - {method: ifca, rounds: 100}
+      - {method: fedper, rounds: 100}
+
+  - name: Q11            # review items 1+2: converged non-private q-FFL (default L) for the M3 comparison
+    dataset: cifar10
+    eps: [inf]
+    runs:
+      - {method: fedavg, aggregation: qffl, qffl_q: 1, rounds: 200}
+      - {method: fedavg, aggregation: qffl, qffl_q: 5, rounds: 200}

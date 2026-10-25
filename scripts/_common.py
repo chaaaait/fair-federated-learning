@@ -41,6 +41,10 @@ def label_of(run: dict) -> str:
         label += f"-qffl{float(run.get('qffl_q', 0)):g}"
     if "dirichlet_alpha" in run:
         label += f"-a{float(run['dirichlet_alpha']):g}"
+    if float(run.get("qffl_L_scale", 1.0)) != 1.0:
+        label += f"-L{float(run['qffl_L_scale']):g}"
+    if "rounds" in run:
+        label += f"-R{int(run['rounds'])}"
     return label
 
 
