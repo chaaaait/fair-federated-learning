@@ -38,12 +38,16 @@ STYLE = {
     "perfedavg": ("Per-FedAvg",         "#eda100", "D"),
     "ifca":      ("Clustered (IFCA)",   "#e87ba4", "v"),
     "fedper":    ("FedPer",             "#008300", "P"),
-    "qffl_q1":   ("q-FFL, q=1",         "#6250d6", "X"),
-    "qffl_q5":   ("q-FFL, q=5",         "#e34948", "*"),
+    "mrmtl":     ("MR-MTL",             "#6250d6", "h"),
+    # q-FFL never shares a chart with MR-MTL; q is an ordered strength, so one red hue, darker = larger q
+    # (validated with the dataviz script: ordinal pair, and all pairs against FedAvg's blue)
+    "qffl_q1":   ("q-FFL, q=1",         "#e34948", "X"),
+    "qffl_q5":   ("q-FFL, q=5",         "#8f2423", "*"),
 }
-MAIN = ["fedavg", "finetune", "local", "perfedavg", "ifca", "fedper"]
+MAIN = ["fedavg", "finetune", "local", "perfedavg", "ifca", "fedper", "mrmtl"]
 SHORT = {"fedavg": "DP-FedAvg", "finetune": "Fine-tune", "local": "Local", "perfedavg": "Per-FedAvg",
-         "ifca": "Clustered", "fedper": "FedPer"}
+         "ifca": "Clustered", "fedper": "FedPer", "mrmtl": "MR-MTL"}
+BLUE_RAMP = ["#86b6ef", "#5598e7", "#2a78d6", "#1c5cab", "#104281"]  # ordinal (validated --ordinal), light -> dark
 INK, INK2, GRID = "#0b0b0b", "#52514e", "#e4e3df"
 INF_POS = 16.0  # where "non-private" sits on the log epsilon axis
 
@@ -266,6 +270,119 @@ def fig_qffl_L(t, eps0):
     save(fig, "m3_qffl_L_sweep")
 
 
+def fig_cost_decomposition(eps0, dataset="cifar10"):
+    """Cost of DP in steps per mechanism: longer non-private training, the main rounds, clipping without noise,
+    full DP; then the same budget spread over more private rounds (results/cost_decomposition.csv)."""
+    p = RESULTS / "cost_decomposition.csv"
+    if not p.exists():
+        return print("  skip cost decomposition (run aggregate.py)")
+    d = pd.read_csv(p)
+    d = d[d.dataset == dataset]
+    if d.empty or d["clip_mean"].isna().all():
+        return print("  skip cost decomposition (no clipping-only runs yet)")
+    R, L = int(d.rounds_main.iloc[0]), int(d.rounds_long.dropna().iloc[0])
+    stages = [("nodp_long", f"no DP\nR = {L}"), ("nodp", f"no DP\nR = {R}"), ("clip", f"clip only\nR = {R}"),
+              ("dp", f"ε = {eps0:g}\nR = {R}"), ("dp_R80", f"ε = {eps0:g}\nR = 80"), ("dp_R200", f"ε = {eps0:g}\nR = 200")]
+    stages = [(s, lab) for s, lab in stages if f"{s}_mean" in d and d[f"{s}_mean"].notna().any()]
+    keys = [s for s, _ in stages]
+    fig, axes = plt.subplots(1, 2, figsize=(DBL, 2.9))
+    for ax, (metric, ylabel) in zip(axes, [("mean", "mean client accuracy (%)"),
+                                          ("worst10", "worst-10% client accuracy (%)")]):
+        g = d[d.metric == metric]
+        x = np.arange(len(keys))
+        for v in [m for m in MAIN if m in set(g.view)]:
+            r = g[g.view == v].iloc[0]
+            ys = np.array([r[f"{s}_mean"] for s in keys], dtype=float) * 100
+            if np.isnan(ys[keys.index("clip")]):
+                continue  # only mechanisms with the clipping-only control
+            es = np.array([r[f"{s}_sd"] for s in keys], dtype=float) * 100
+            label, color, marker = STYLE[v]
+            ax.errorbar(x, ys, yerr=np.nan_to_num(es), color=color, marker=marker, label=label, capsize=2,
+                        elinewidth=0.8)
+        if "dp" in keys and keys.index("dp") < len(keys) - 1:
+            ax.axvline(keys.index("dp") + 0.5, color=INK2, linewidth=0.8, linestyle=":")
+        ax.set_xticks(x)
+        ax.set_xticklabels([lab for _, lab in stages], fontsize=6.5)
+        ax.set_xlim(-0.4, len(keys) - 0.6)
+        ax.grid(axis="x", visible=False)
+        ax.set_ylabel(ylabel)
+    axes[0].set_title("(a) average client")
+    axes[1].set_title("(b) worst 10% of clients")
+    handles, labels = axes[0].get_legend_handles_labels()
+    fig.legend(handles, labels, loc="outside upper center", ncol=len(labels), frameon=False)
+    save(fig, "cost_of_dp_steps")
+
+
+def fig_mrmtl_lambda(dataset="cifar10"):
+    """MR-MTL test accuracy against lambda on the selection seed, one line per budget (lambda = 0 is local
+    training); the filled marker is the lambda picked on validation."""
+    p = RESULTS / "mrmtl_lambda.csv"
+    if not p.exists():
+        return print("  skip MR-MTL lambda (no MR-MTL runs yet)")
+    d = pd.read_csv(p)
+    d = d[d.dataset == dataset]
+    budgets = [e for e in (math.inf, 8.0, 2.0, 0.5, 0.3) if (np.isinf(d.eps) if np.isinf(e) else d.eps == e).any()]
+    if not budgets:
+        return print("  skip MR-MTL lambda (no budgets)")
+    lam0 = 10 ** (np.log10(d[d["lambda"] > 0]["lambda"].min()) - 1)  # where lambda = 0 sits on the log axis
+    fig, axes = plt.subplots(1, 2, figsize=(DBL, 2.6))
+    for ax, (metric, ylabel) in zip(axes, [("test_mean", "mean client accuracy (%)"),
+                                          ("test_worst10", "worst-10% client accuracy (%)")]):
+        for e, color in zip(budgets, BLUE_RAMP):
+            g = d[(np.isinf(d.eps) if np.isinf(e) else d.eps == e)].sort_values("lambda")
+            xs = np.where(g["lambda"] > 0, g["lambda"], lam0)
+            ys = g[metric].to_numpy() * 100
+            tag = "no DP" if np.isinf(e) else f"ε = {e:g}"
+            ax.plot(xs, ys, color=color, marker="o", markerfacecolor="white", markeredgewidth=1.0, label=tag)
+            ch = g[g.chosen.astype(bool)]
+            if len(ch):
+                ax.plot(ch["lambda"], ch[metric] * 100, color=color, marker="o", linestyle="none", markersize=6)
+        ax.set_xscale("log")
+        ticks = [lam0] + sorted(d[d["lambda"] > 0]["lambda"].unique())
+        ax.set_xticks(ticks)
+        ax.set_xticklabels(["0\n(local)"] + [f"{t:g}" for t in ticks[1:]])
+        ax.minorticks_off()
+        ax.set_xlabel("MR-MTL regularisation λ")
+        ax.set_ylabel(ylabel)
+    axes[0].set_title("(a) average client")
+    axes[1].set_title("(b) worst 10% of clients")
+    handles, labels = axes[0].get_legend_handles_labels()
+    from matplotlib.lines import Line2D
+
+    handles.append(Line2D([], [], color=INK2, marker="o", linestyle="none", markersize=6))
+    labels.append("λ picked on validation")
+    fig.legend(handles, labels, loc="outside upper center", ncol=len(labels), frameon=False)
+    save(fig, "mrmtl_lambda")
+
+
+def fig_private_rounds(eps0, dataset="cifar10"):
+    """Validation curves of the private runs at eps0 trained for 40, 80 and 200 rounds (sigma recalibrated each
+    time), one panel per mechanism; mean over the seeds available."""
+    p = RESULTS / "curves.csv"
+    if not p.exists():
+        return print("  skip private rounds (no curves.csv)")
+    c = pd.read_csv(p)
+    c = c[(c.dataset == dataset) & (c.alpha == 0.3) & (c.eps == eps0) & (c.aggregation == "mean")
+          & c.variant.fillna("").isin(["", "R80", "R200"])]
+    methods = [m for m in ("fedavg", "local", "fedper") if (c[c.method == m].rounds > 40).any()]
+    if not methods:
+        return print("  skip private rounds (no longer private runs yet)")
+    fig, axes = plt.subplots(1, len(methods), figsize=(DBL, 2.4), sharey=True, squeeze=False)
+    for ax, m in zip(axes[0], methods):
+        rounds = sorted(c[c.method == m].rounds.unique())
+        shades = [BLUE_RAMP[i] for i in np.linspace(0, len(BLUE_RAMP) - 1, len(rounds)).round().astype(int)]
+        for R, color in zip(rounds, shades):
+            h = c[(c.method == m) & (c.rounds == R)]
+            s = h.groupby("round").val_mean.agg(["mean", "std"]) * 100
+            n = h.seed.nunique()
+            ax.plot(s.index, s["mean"], color=color, marker="o", markersize=3, label=f"{R} rounds (n = {n})")
+        ax.set_title(SHORT.get(m, m) if m != "fedavg" else "DP-FedAvg (global model)")
+        ax.set_xlabel("round")
+        ax.legend(frameon=False, fontsize=6.5, loc="lower right")
+    axes[0][0].set_ylabel(f"validation accuracy at ε = {eps0:g} (%)")
+    save(fig, "private_rounds")
+
+
 def fig_gain_boxes(runs, eps0, dataset="cifar10", alpha=0.3):
     """Per-client personalisation gain at eps0, pooled over seeds (needs per-client accuracies)."""
     from aggregate import load_rows  # per-client arrays live in the run JSONs
@@ -478,6 +595,9 @@ def main():
     fig_qffl_L(t, args.eps0)
     fig_mia(t, conv, conv_rounds)
     fig_convergence()
+    fig_cost_decomposition(args.eps0, args.dataset)
+    fig_mrmtl_lambda(args.dataset)
+    fig_private_rounds(args.eps0, args.dataset)
     print("tables:")
     table_main(t, args.eps0)
     table_adult(t_all, args.eps0)
