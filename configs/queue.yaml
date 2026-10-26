@@ -4,6 +4,8 @@
 
 eps0: 2.0                # Gate 2: confirm after Q1+Q2 (DP-FedAvg still learns but loses >= 5 points)
 seeds: [0, 1, 2]
+mrmtl_grid: [0.01, 0.1, 1, 10]   # MR-MTL lambda grid; "mrmtl_lambda: auto" = the grid value with the best
+mrmtl_select_seeds: [0]          # final validation accuracy on these seeds (test accuracy is never used)
 
 blocks:
   - name: Q1             # M1 privacy sweep (FedAvg + fine-tuning from one run)
@@ -101,3 +103,147 @@ blocks:
     runs:
       - {method: fedavg, aggregation: qffl, qffl_q: 1, rounds: 200}
       - {method: fedavg, aggregation: qffl, qffl_q: 5, rounds: 200}
+
+  # ---- Level-2 corrections (26 Oct 2026), most important first ----------------------------------------------------
+  - name: Q12            # cost of DP, step 1: clipping only (C = 1, Poisson batches as in DP-SGD, no noise -> eps = inf)
+    dataset: cifar10
+    eps: [inf]
+    runs:
+      - {method: fedavg, clip_only: true}
+      - {method: local, clip_only: true}
+      - {method: fedper, clip_only: true}
+
+  - name: Q13            # cost of DP, step 2: private runs with 2x the rounds (sigma recalibrated, same eps)
+    dataset: cifar10
+    eps: [eps0]
+    runs:
+      - {method: fedavg, rounds: 80}
+      - {method: local, rounds: 80}
+      - {method: fedper, rounds: 80}
+
+  - name: Q14            # cost of DP, step 3: 200 private rounds, seed 0 (seeds 1-2 are the last block)
+    dataset: cifar10
+    eps: [eps0]
+    seeds: [0]
+    runs:
+      - {method: fedavg, rounds: 200}
+      - {method: local, rounds: 200}
+      - {method: fedper, rounds: 200}
+
+  - name: Q15            # complete the eps = 0.3 column (Q1 has DP-FedAvg + fine-tuning)
+    dataset: cifar10
+    eps: [0.3]
+    runs:
+      - {method: local}
+      - {method: fedper}
+      - {method: perfedavg}
+      - {method: ifca}
+
+  - name: Q16            # milder label skew (alpha = 1.0) under DP (Q7 has DP-FedAvg, fine-tuning, FedPer)
+    dataset: cifar10
+    eps: [eps0]
+    runs:
+      - {method: local, dirichlet_alpha: 1.0}
+      - {method: perfedavg, dirichlet_alpha: 1.0}
+      - {method: ifca, dirichlet_alpha: 1.0}
+
+  - name: Q17            # alpha = 1.0 without DP: does federation help there, and what does DP cost?
+    dataset: cifar10
+    eps: [inf]
+    runs:
+      - {method: fedavg, dirichlet_alpha: 1.0}
+      - {method: local, dirichlet_alpha: 1.0}
+      - {method: fedper, dirichlet_alpha: 1.0}
+      - {method: perfedavg, dirichlet_alpha: 1.0}
+      - {method: ifca, dirichlet_alpha: 1.0}
+
+  - name: Q18            # MR-MTL (Liu et al. 2022): lambda grid on seed 0 at every budget
+    dataset: cifar10
+    eps: [inf, 8, 4, 2, 1, 0.5, 0.3]
+    seeds: [0]
+    runs:
+      - {method: mrmtl, mrmtl_lambda: 0.01}
+      - {method: mrmtl, mrmtl_lambda: 0.1}
+      - {method: mrmtl, mrmtl_lambda: 1}
+      - {method: mrmtl, mrmtl_lambda: 10}
+
+  - name: Q19            # MR-MTL at the lambda chosen on validation (per eps), seeds 1-2
+    dataset: cifar10
+    eps: [inf, 8, 4, 2, 1, 0.5, 0.3]
+    seeds: [1, 2]
+    runs:
+      - {method: mrmtl, mrmtl_lambda: auto}
+
+  - name: Q20            # Adult: MR-MTL grid (seed 0)
+    dataset: adult
+    eps: [inf, eps0]
+    seeds: [0]
+    runs:
+      - {method: mrmtl, mrmtl_lambda: 0.01}
+      - {method: mrmtl, mrmtl_lambda: 0.1}
+      - {method: mrmtl, mrmtl_lambda: 1}
+      - {method: mrmtl, mrmtl_lambda: 10}
+
+  - name: Q21            # Adult: MR-MTL at the chosen lambda, seeds 1-2
+    dataset: adult
+    eps: [inf, eps0]
+    seeds: [1, 2]
+    runs:
+      - {method: mrmtl, mrmtl_lambda: auto}
+
+  - name: Q22            # Adult: clipping only (is the larger EO gap under DP caused by clipping or by noise?)
+    dataset: adult
+    eps: [inf]
+    runs:
+      - {method: fedavg, clip_only: true}
+      - {method: local, clip_only: true}
+      - {method: perfedavg, clip_only: true}
+      - {method: ifca, clip_only: true}
+      - {method: fedper, clip_only: true}
+
+  - name: Q23            # seeds 3-4 at eps0 -> 5 seeds for the main comparison (paired differences, 95% CIs)
+    dataset: cifar10
+    eps: [eps0]
+    seeds: [3, 4]
+    runs:
+      - {method: fedavg}
+      - {method: local}
+      - {method: fedper}
+      - {method: perfedavg}
+      - {method: ifca}
+      - {method: mrmtl, mrmtl_lambda: auto}
+      - {method: fedavg, aggregation: qffl, qffl_q: 1, qffl_L_scale: 0.01}
+
+  - name: Q24            # learning-rate check at eps0 (default 0.05); the best value is picked on validation
+    dataset: cifar10
+    eps: [eps0]
+    runs:
+      - {method: fedavg, lr_local: 0.025}
+      - {method: fedavg, lr_local: 0.1}
+      - {method: local, lr_local: 0.025}
+      - {method: local, lr_local: 0.1}
+      - {method: fedper, lr_local: 0.025}
+      - {method: fedper, lr_local: 0.1}
+
+  - name: Q25            # the two explanations in Section 5.2: Per-FedAvg with 20 meta-steps per round, IFCA with 2 clusters
+    dataset: cifar10
+    eps: [eps0]
+    runs:
+      - {method: perfedavg, perfedavg_meta_steps: 20}
+      - {method: ifca, ifca_k: 2}
+
+  - name: Q26            # clipping only for the other two mechanisms
+    dataset: cifar10
+    eps: [inf]
+    runs:
+      - {method: perfedavg, clip_only: true}
+      - {method: ifca, clip_only: true}
+
+  - name: Q27            # 200 private rounds, seeds 1-2
+    dataset: cifar10
+    eps: [eps0]
+    seeds: [1, 2]
+    runs:
+      - {method: fedavg, rounds: 200}
+      - {method: local, rounds: 200}
+      - {method: fedper, rounds: 200}

@@ -26,7 +26,7 @@ DEFAULTS = {
     # model
     "model": "auto",                 # auto | cnn | mlp
     # federated training
-    "method": "fedavg",              # fedavg | local | perfedavg | ifca | fedper
+    "method": "fedavg",              # fedavg | local | perfedavg | ifca | fedper | mrmtl
     "aggregation": "mean",           # mean | qffl
     "qffl_q": 0.0,
     "qffl_L_scale": 1.0,             # q-FedAvg Lipschitz estimate L = scale / lr_local (1.0 = Li et al. default)
@@ -39,7 +39,9 @@ DEFAULTS = {
     "perfedavg_alpha": 0.03,         # inner (adaptation) step size
     "perfedavg_beta": 0.05,          # outer (meta) step size
     "perfedavg_adapt_steps": 5,      # personalisation steps after training (charged to the budget)
+    "perfedavg_meta_steps": None,    # meta-steps per round (2 queries each); None = local_steps // 2
     "ifca_k": 3,                     # number of cluster models
+    "mrmtl_lambda": 0.1,             # MR-MTL pull towards the server mean; the queue picks it on validation
     # differential privacy (per-example DP-SGD inside each client)
     "epsilon": 2.0,                  # null / inf = non-private
     "delta": 1.0e-5,
@@ -47,6 +49,7 @@ DEFAULTS = {
     "clip_norm": 1.0,
     "loss_noise_ratio": 30.0,        # noise multiplier of private loss reports = ratio x sigma
     "loss_clip": 3.0,                # per-record loss clip for private loss reports
+    "clip_only": False,              # control (eps = inf): clip and Poisson-sample as in DP-SGD, add no noise
     "grad_backend": "opacus",        # opacus | functorch
     "max_physical_batch": 128,       # per-example gradients are computed in chunks of this size
     # evaluation

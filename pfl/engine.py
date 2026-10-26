@@ -67,6 +67,8 @@ def run_experiment(cfg: dict, log=print) -> dict:
     w0 = get_flat(model)
 
     eps = cfg["epsilon"]
+    if cfg.get("clip_only") and eps is not None:
+        raise ValueError("clip_only is a non-private control: use epsilon = inf")
     t_grad, t_loss = query_schedule(cfg)
     if eps is None:
         sigma, eps_spent = 0.0, None
@@ -79,7 +81,8 @@ def run_experiment(cfg: dict, log=print) -> dict:
     engine = GradEngine(model, cfg["grad_backend"], cfg["max_physical_batch"])
     ctx = Ctx(cfg, data, model, engine, device, sigma, gen, log=log)
     log(f"[run] {cfg['dataset']} {cfg['method']}/{cfg['aggregation']} eps={eps_tag(eps)} seed={cfg['seed']} "
-        f"sigma={sigma:.3f} queries/client={t_grad}+{t_loss} K={ctx.K} P={ctx.P} device={device}")
+        f"sigma={sigma:.3f}{' (clip only)' if ctx.clip_only else ''} queries/client={t_grad}+{t_loss} "
+        f"K={ctx.K} P={ctx.P} device={device}")
 
     views = METHODS[cfg["method"]](ctx, w0)
 
@@ -101,6 +104,7 @@ def run_experiment(cfg: dict, log=print) -> dict:
             "sigma_loss": ctx.sigma_loss,
             "sample_rate": cfg["sample_rate"],
             "clip_norm": cfg["clip_norm"],
+            "clip_only": ctx.clip_only,
             "grad_queries_per_client": t_grad,
             "loss_queries_per_client": t_loss,
             "observed_queries_per_client": observed,

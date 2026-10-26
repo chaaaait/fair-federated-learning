@@ -9,7 +9,12 @@ local         nothing                   own model trained only on own data
 perfedavg     full model                meta-model + a few DP adaptation steps (first-order Per-FedAvg)
 ifca          full model of 1 cluster   the cluster model it picks by (noisy) lowest loss
 fedper        body only                 shared body + head that never leaves the client
+mrmtl         full model                own model, pulled towards the server mean by lam/2 ||w_k - w_bar||^2
+                                        (MR-MTL, Liu et al. 2022, Alg. A1); lam = 0 is local training
 q-FFL         aggregation="qffl" with fedavg or fedper: server upweights high-loss clients (q-FedAvg)
+
+clip_only=True (control, eps = inf): per-record gradients are clipped and batches Poisson-sampled exactly as in
+DP-SGD, but no noise is added, so a run isolates the cost of clipping from the cost of noise.
 """
 from __future__ import annotations
 
@@ -31,6 +36,7 @@ class Ctx:
         self.cfg, self.data, self.model, self.engine, self.device = cfg, data, model, engine, device
         self.sigma = float(sigma)
         self.private = self.sigma > 0
+        self.clip_only = bool(cfg.get("clip_only", False)) and not self.private
         self.sigma_loss = cfg["loss_noise_ratio"] * self.sigma if self.private else 0.0
         self.gen = gen
         self.log = log
@@ -49,7 +55,7 @@ class Ctx:
     # -- private queries ------------------------------------------------------------------
     def grad_query(self, client):
         self.qcount[client.cid]["grad"] += 1
-        if self.private:
+        if self.private or self.clip_only:  # clip_only: sigma = 0, so private_grad clips but adds no noise
             return self.engine.private_grad(client.x_tr, client.y_tr, self.data.prep, self.q,
                                             self.sigma, self.C, self.gen)
         return self.engine.plain_grad(client.x_tr, client.y_tr, self.data.prep, self.q, self.gen)
@@ -65,15 +71,18 @@ class Ctx:
 
     def loss_query(self, vec, client) -> float:
         """Mean training loss of `vec` on the client. Private runs: per-record losses clipped to
-        [0, loss_clip], summed, Gaussian noise (sigma_loss * loss_clip) added, divided by n."""
+        [0, loss_clip], summed, Gaussian noise (sigma_loss * loss_clip) added, divided by n.
+        clip_only runs: clipped the same way, no noise."""
         self.qcount[client.cid]["loss"] += 1
         set_flat(self.model, vec)
         losses = record_losses(self.model, client.x_tr, client.y_tr, self.data.prep)
-        if not self.private:
+        if not (self.private or self.clip_only):
             return float(losses.mean())
         clip = self.cfg["loss_clip"]
-        noise = torch.randn((), generator=self.gen, device=self.device) * (self.sigma_loss * clip)
-        return float((losses.clamp(0.0, clip).sum() + noise) / client.n_tr)
+        total = losses.clamp(0.0, clip).sum()
+        if self.private:
+            total = total + torch.randn((), generator=self.gen, device=self.device) * (self.sigma_loss * clip)
+        return float(total / client.n_tr)
 
     # -- logging --------------------------------------------------------------------------
     def log_curve(self, r: int, vec_for) -> None:
@@ -210,10 +219,15 @@ def _perfedavg_local(ctx: Ctx, w, c, meta_steps: int, alpha: float, beta: float)
     return get_flat(ctx.model)
 
 
+def _meta_steps(cfg) -> int:
+    """Per-FedAvg meta-steps per round (2 gradient queries each). Default S/2 = the query count of FedAvg."""
+    return int(cfg.get("perfedavg_meta_steps") or cfg["local_steps"] // 2)
+
+
 def run_perfedavg(ctx: Ctx, w0: torch.Tensor) -> dict:
     cfg = ctx.cfg
     alpha, beta, adapt = cfg["perfedavg_alpha"], cfg["perfedavg_beta"], cfg["perfedavg_adapt_steps"]
-    meta_steps = ctx.S // 2
+    meta_steps = _meta_steps(cfg)
     w = w0.clone()
     for r in range(ctx.R):
         ctx.sw.start()
@@ -287,12 +301,48 @@ def run_fedper(ctx: Ctx, w0: torch.Tensor) -> dict:
                    "comm": ctx.comm("base", ctx.R, extra_up=1 if qffl else 0)}}
 
 
+def _train_prox(ctx: Ctx, vec, client, steps: int, lr: float, anchor: torch.Tensor, lam: float):
+    """Like Ctx.train, plus the gradient lam (w - anchor) of the mean-regularisation term. The term does not touch
+    the data, so it is added after clipping and noise and costs no privacy (Liu et al. 2022, App. D.1)."""
+    set_flat(ctx.model, vec)
+    for _ in range(steps):
+        g = ctx.grad_query(client)
+        if lam > 0:
+            reg = lam * (get_flat(ctx.model) - anchor)
+            g = reg if g is None else g + reg
+        if g is not None:
+            ctx.engine.add_flat_(g, -lr)
+    return get_flat(ctx.model)
+
+
+def run_mrmtl(ctx: Ctx, w0: torch.Tensor) -> dict:
+    """Mean-regularised multi-task learning (Liu et al., NeurIPS 2022, Alg. A1). Personal models stay on the
+    clients; the server mean moves by the (data-size weighted) mean of their updates."""
+    cfg = ctx.cfg
+    lam = float(cfg["mrmtl_lambda"])
+    w_bar = w0.clone()
+    vecs = [w0.clone() for _ in ctx.clients]
+    for r in range(ctx.R):
+        ctx.sw.start()
+        agg = MeanAgg(cfg["lr_server"])
+        for i, c in enumerate(ctx.clients):
+            v = _train_prox(ctx, vecs[i], c, ctx.S, ctx.lr, w_bar, lam)
+            agg.add(v - vecs[i], c.n_tr)
+            vecs[i] = v
+        w_bar = agg.result(w_bar)
+        ctx.round_times.append(ctx.sw.stop())
+        if ctx.should_log(r):
+            ctx.log_curve(r + 1, lambda i: vecs[i])
+    return {"mrmtl": {"vecs": vecs, "comm": ctx.comm("full", ctx.R), "note": f"lambda = {lam:g}"}}
+
+
 METHODS = {
     "fedavg": run_fedavg,
     "local": run_local,
     "perfedavg": run_perfedavg,
     "ifca": run_ifca,
     "fedper": run_fedper,
+    "mrmtl": run_mrmtl,
 }
 
 
@@ -306,10 +356,14 @@ def query_schedule(cfg: dict) -> tuple[int, int]:
         if qffl:
             raise ValueError("q-FFL needs a server; not valid with method=local")
         return R * S, 0
+    if m == "mrmtl":
+        if qffl:
+            raise ValueError("q-FFL + MR-MTL is not implemented")
+        return R * S, 0
     if m == "perfedavg":
         if qffl:
             raise ValueError("q-FFL + Per-FedAvg is not implemented")
-        return 2 * (S // 2) * R + cfg["perfedavg_adapt_steps"], 0
+        return 2 * _meta_steps(cfg) * R + cfg["perfedavg_adapt_steps"], 0
     if m == "ifca":
         if qffl:
             raise ValueError("q-FFL + IFCA is not implemented")

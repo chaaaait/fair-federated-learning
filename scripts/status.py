@@ -34,6 +34,9 @@ def main():
     total_pending = sum(p["pending"] for p in per.values())
     total_failed = sum(p["failed"] for p in per.values())
     print(f"{'all':<6}{total_done:>6}{total_failed:>8}{total_pending:>9}   ({len(specs)} runs in queue)")
+    n_wait = sum(s.waiting for s in specs)
+    if n_wait:
+        print(f"({n_wait} of the pending MR-MTL runs wait for their lambda grid to finish)")
     if times:
         avg = sum(times) / len(times)
         eta = dt.datetime.now() + dt.timedelta(seconds=avg * total_pending)

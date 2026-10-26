@@ -7,6 +7,8 @@
 
 - Finished runs (results/runs/<id>.json) are skipped; a crash writes <id>.error.json and the sweep moves on.
 - The queue file is re-read before every run, so changing eps0 (Gate 2) affects runs not yet started.
+- MR-MTL runs with `mrmtl_lambda: auto` wait until their lambda grid has finished, then use the value with the
+  best validation accuracy (scripts/_common.py, resolve_auto_lambda).
 - A lock file stops two sweeps from sharing the GPU. It counts as stale after 30 min without a heartbeat.
 """
 from __future__ import annotations
@@ -64,7 +66,8 @@ def main():
         specs = expand_queue(args.queue, args.only)
         todo = [s for s in specs if not s.result_path.exists()]
         for s in todo:
-            tag = "FAILED-before" if s.error_path.exists() else ""
+            tag = "FAILED-before" if s.error_path.exists() else ("WAITING (lambda picked after its grid)"
+                                                                 if s.waiting else "")
             print(f"{s.block:<4} {s.run_id} {tag}")
         print(f"\n{len(todo)} to run, {len(specs) - len(todo)} done, {len(specs)} total")
         return
@@ -77,8 +80,11 @@ def main():
         while True:
             specs = expand_queue(args.queue, args.only)
             pending = [s for s in specs if not s.result_path.exists() and s.run_id not in attempted
-                       and (args.retry_failed or not s.error_path.exists())]
+                       and not s.waiting and (args.retry_failed or not s.error_path.exists())]
             if not pending:
+                stuck = [s.run_id for s in specs if s.waiting]
+                if stuck:
+                    log_line(f"{len(stuck)} auto runs never got their lambda (a grid run failed?): {stuck}")
                 break
             spec = pending[0]
             attempted.add(spec.run_id)
