@@ -80,16 +80,24 @@ def eps_axis(ax, eps_values):
     ax.set_xlabel("privacy budget ε (δ = 10⁻⁵); ∞ = no DP")
 
 
-def line_panel(ax, t, views, metric, ylabel, pct=True):
+def line_panel(ax, t, views, metric, ylabel, pct=True, conv=None):
+    """One line per configuration across the privacy sweep. `conv` (optional, summary_converged rows) adds a hollow
+    marker at the non-private position for the same configuration trained longer."""
     shown = False
+    k = 100 if pct else 1
     for v in views:
         g = t[t.view == v].sort_values("eps")
         if g.empty:
             continue
         label, color, marker = STYLE[v]
-        k = 100 if pct else 1
         ax.errorbar([xpos(e) for e in g.eps], g[f"{metric}_mean"] * k, yerr=g[f"{metric}_std"].fillna(0) * k,
                     color=color, marker=marker, label=label, capsize=2, elinewidth=0.8)
+        if conv is not None:
+            c = conv[conv.view == v]
+            if len(c) and f"{metric}_mean" in c and pd.notna(c[f"{metric}_mean"].iloc[0]):
+                ax.errorbar([INF_POS], c[f"{metric}_mean"] * k, yerr=c[f"{metric}_std"].fillna(0) * k, color=color,
+                            marker=marker, markerfacecolor="white", markeredgewidth=1.1, markersize=5.5,
+                            linestyle="none", capsize=2, elinewidth=0.8, zorder=3)
         shown = True
     if shown:
         eps_axis(ax, t.eps.unique())
@@ -97,24 +105,51 @@ def line_panel(ax, t, views, metric, ylabel, pct=True):
     return shown
 
 
-def fig_m1(t):
+def conv_handle(rounds):
+    """Legend proxy for the hollow 'trained longer' markers."""
+    from matplotlib.lines import Line2D
+
+    return (Line2D([], [], color=INK2, marker="o", markerfacecolor="white", linestyle="none", markersize=5),
+            f"no DP, {rounds} rounds (hollow)")
+
+
+def load_converged(dataset="cifar10", alpha=0.3):
+    p = RESULTS / "summary_converged.csv"
+    if not p.exists():
+        return None, None
+    c = pd.read_csv(p)
+    c = c[(c.dataset == dataset) & (c.alpha == alpha) & np.isinf(c.eps)]
+    if c.empty:
+        return None, None
+    return c, int(c.rounds.max())
+
+
+def legend_with_conv(ax, rounds, **kw):
+    handles, labels = ax.get_legend_handles_labels()
+    if rounds:
+        h, lab = conv_handle(rounds)
+        handles, labels = handles + [h], labels + [lab]
+    ax.legend(handles, labels, frameon=False, **kw)
+
+
+def fig_m1(t, conv=None, conv_rounds=None):
     views = ["fedavg", "finetune"]
     if t[t.view.isin(views)].empty:
         return print("  skip m1 (no FedAvg runs yet)")
     fig, axes = plt.subplots(1, 2, figsize=(DBL, 2.4))
-    line_panel(axes[0], t, views, "mean", "mean client accuracy (%)")
-    line_panel(axes[1], t, views, "worst10", "worst-10% client accuracy (%)")
+    line_panel(axes[0], t, views, "mean", "mean client accuracy (%)", conv=conv)
+    line_panel(axes[1], t, views, "worst10", "worst-10% client accuracy (%)", conv=conv)
     axes[0].set_title("(a) average client")
     axes[1].set_title("(b) worst 10% of clients")
-    axes[0].legend(frameon=False)
+    legend_with_conv(axes[0], conv_rounds)
     save(fig, "m1_accuracy_vs_eps")
 
     fig, axes = plt.subplots(1, 2, figsize=(DBL, 2.4))
-    line_panel(axes[0], t, views, "jain", "Jain's fairness index", pct=False)
-    line_panel(axes[1], t, views, "std", "SD of client accuracy (pts)")
+    line_panel(axes[0], t, views, "jain", "Jain's fairness index", pct=False, conv=conv)
+    line_panel(axes[1], t, views, "std", "SD of client accuracy (pts)", conv=conv)
     axes[0].set_title("(a) evenness (1 = all clients equal)")
     axes[1].set_title("(b) spread across clients")
-    axes[0].legend(frameon=False)
+    legend_with_conv(axes[0], conv_rounds)
     save(fig, "m1_fairness_vs_eps")
 
 
@@ -145,17 +180,90 @@ def fig_m2_bars(t, eps0):
     save(fig, "m2_mechanisms_at_eps0")
 
 
-def fig_m2_sweep(t):
+def fig_m2_sweep(t, conv=None, conv_rounds=None):
     if t[t.view.isin(MAIN)].eps.nunique() < 3:
         return print("  skip m2 sweep (fewer than 3 budgets)")
-    fig, axes = plt.subplots(1, 2, figsize=(DBL, 2.6))
-    line_panel(axes[0], t, MAIN, "mean", "mean client accuracy (%)")
-    line_panel(axes[1], t, MAIN, "worst10", "worst-10% client accuracy (%)")
+    fig, axes = plt.subplots(1, 2, figsize=(DBL, 2.8))
+    line_panel(axes[0], t, MAIN, "mean", "mean client accuracy (%)", conv=conv)
+    line_panel(axes[1], t, MAIN, "worst10", "worst-10% client accuracy (%)", conv=conv)
     axes[0].set_title("(a) average client")
     axes[1].set_title("(b) worst 10% of clients")
     handles, labels = axes[0].get_legend_handles_labels()
-    fig.legend(handles, labels, loc="outside upper center", ncol=6, frameon=False)
+    if conv_rounds:
+        h, lab = conv_handle(conv_rounds)
+        handles, labels = handles + [h], labels + [lab]
+    fig.legend(handles, labels, loc="outside upper center", ncol=7, frameon=False)
     save(fig, "m2_accuracy_vs_eps_all")
+
+
+def fig_convergence():
+    """Validation accuracy of the long non-private runs (mean over seeds), to show where training levels off.
+    Per-FedAvg is left out: its curve tracks the meta-model before each client adapts it."""
+    p = RESULTS / "curves_nonprivate.csv"
+    if not p.exists():
+        return print("  skip convergence (no curves_nonprivate.csv)")
+    c = pd.read_csv(p)
+    c["view"] = np.where(c.aggregation == "qffl", "qffl_q" + c.qffl_q.map(lambda q: f"{q:g}"), c.method)
+    panels = [("cifar10", "(a) CIFAR-10"), ("adult", "(b) Adult")]
+    long_runs = {ds: c[c.dataset == ds].rounds.max() for ds, _ in panels}
+    if not all(np.isfinite(v) for v in long_runs.values()):
+        return print("  skip convergence (missing data)")
+    fig, axes = plt.subplots(1, 2, figsize=(DBL, 2.5))
+    for ax, (ds, title) in zip(axes, panels):
+        R = long_runs[ds]
+        g = c[(c.dataset == ds) & (c.rounds == R)]
+        if ds == "cifar10":
+            g = g[g.alpha == 0.3]
+        main_r = int(c[(c.dataset == ds) & (c.rounds < R)].rounds.max())
+        for v in ["fedavg", "local", "ifca", "fedper", "qffl_q1", "qffl_q5"]:
+            h = g[g.view == v]
+            if h.empty:
+                continue
+            s = h.groupby("round").val_mean.agg(["mean", "std"]) * 100
+            label, color, marker = STYLE[v]
+            ax.plot(s.index, s["mean"], color=color, marker=marker, markevery=4, markersize=3.5,
+                    label=label.replace("DP-", "").replace(" (global)", ""))
+            ax.fill_between(s.index, s["mean"] - s["std"].fillna(0), s["mean"] + s["std"].fillna(0),
+                            color=color, alpha=0.12, linewidth=0)
+        ax.axvline(main_r, color=INK2, linewidth=0.8, linestyle=":")
+        ax.annotate(f"main protocol: {main_r} rounds", (main_r, 0), xycoords=("data", "axes fraction"),
+                    textcoords="offset points", xytext=(3, 4), fontsize=6.5, color=INK2)
+        ax.set_xlabel("round")
+        ax.set_ylabel("validation accuracy, no DP (%)")
+        ax.set_title(title)
+    handles, labels = axes[0].get_legend_handles_labels()
+    fig.legend(handles, labels, loc="outside upper center", ncol=6, frameon=False)
+    save(fig, "nonprivate_convergence")
+
+
+def fig_qffl_L(t, eps0):
+    """q-FFL (q = 1) accuracy against the q-FedAvg constant L = s / lr, with FedAvg as the reference."""
+    scales = [0.01, 0.1, 1.0, 10.0, 100.0]
+    view = {s: "qffl_q1" + ("" if s == 1.0 else f"_L{s:g}") for s in scales}
+    if not all(((t.view == v).any()) for v in view.values()):
+        return print("  skip q-FFL L sweep (runs missing)")
+    fig, axes = plt.subplots(1, 2, figsize=(DBL, 2.5))
+    for ax, (m, lab) in zip(axes, [("mean", "mean client accuracy (%)"), ("worst10", "worst-10% client accuracy (%)")]):
+        for eps, ls, tag in ((eps0, "-", f"ε = {eps0:g}"), (math.inf, ":", "no DP")):
+            sel = (lambda d: np.isinf(d.eps)) if np.isinf(eps) else (lambda d: d.eps == eps)
+            rows = [t[(t.view == view[s]) & sel(t)].iloc[0] for s in scales]
+            ax.errorbar(scales, [r[f"{m}_mean"] * 100 for r in rows], yerr=[(r[f"{m}_std"] or 0) * 100 for r in rows],
+                        color=STYLE["qffl_q1"][1], marker=STYLE["qffl_q1"][2], linestyle=ls, capsize=2,
+                        elinewidth=0.8, label=f"q-FFL (q=1), {tag}")
+            ref = t[(t.view == "fedavg") & sel(t)].iloc[0]
+            ax.axhline(ref[f"{m}_mean"] * 100, color=STYLE["fedavg"][1], linestyle=ls, linewidth=0.9,
+                       label=f"FedAvg, {tag}")
+        ax.set_xscale("log")
+        ax.set_xticks(scales)
+        ax.set_xticklabels(["0.01", "0.1", "1\n(default)", "10", "100"])
+        ax.minorticks_off()
+        ax.set_xlabel("q-FedAvg constant L (× 1/η)")
+        ax.set_ylabel(lab)
+    axes[0].set_title("(a) average client")
+    axes[1].set_title("(b) worst 10% of clients")
+    handles, labels = axes[0].get_legend_handles_labels()
+    fig.legend(handles, labels, loc="outside upper center", ncol=4, frameon=False)
+    save(fig, "m3_qffl_L_sweep")
 
 
 def fig_gain_boxes(runs, eps0, dataset="cifar10", alpha=0.3):
@@ -227,20 +335,20 @@ def fig_qffl(t, eps0):
     save(fig, "m3_qffl_tradeoff")
 
 
-def fig_mia(t):
+def fig_mia(t, conv=None, conv_rounds=None):
     views = [v for v in MAIN if v in set(t.view)]
     g = t[t.view.isin(views) & t["mia_auc_mean"].notna()]
     if g.eps.nunique() < 2:
         return print("  skip MIA (need >= 2 budgets)")
-    fig, ax = plt.subplots(figsize=(COL, 2.5))
-    line_panel(ax, g, views, "mia_auc", "membership-inference AUC", pct=False)
+    fig, ax = plt.subplots(figsize=(COL, 2.7))
+    line_panel(ax, g, views, "mia_auc", "membership-inference AUC", pct=False, conv=conv)
     ax.axhline(0.5, color=INK2, linewidth=0.8, linestyle="--")
     lo, hi = ax.get_ylim()
     ax.set_ylim(min(lo, 0.5 - 0.15 * (hi - lo)), hi)  # room under the 0.5 line for its label
     ax.annotate("random guessing", (min(g.eps), 0.5), textcoords="offset points", xytext=(2, -3), va="top",
                 fontsize=6.5, color=INK2)
     ax.set_title("Measured leakage vs theoretical budget")
-    ax.legend(frameon=False, fontsize=6.5, ncol=2)
+    legend_with_conv(ax, conv_rounds, fontsize=6.5, ncol=2, loc="upper left")
     save(fig, "privacy_mia_vs_eps")
 
 
@@ -360,13 +468,16 @@ def main():
         raise SystemExit("run scripts/aggregate.py first")
     t_all = pd.read_csv(path)
     t = t_all[(t_all.dataset == args.dataset) & (t_all.alpha == 0.3)]
+    conv, conv_rounds = load_converged(args.dataset)
     print(f"figures (eps0 = {args.eps0:g}):")
-    fig_m1(t)
+    fig_m1(t, conv, conv_rounds)
     fig_m2_bars(t, args.eps0)
-    fig_m2_sweep(t)
+    fig_m2_sweep(t, conv, conv_rounds)
     fig_gain_boxes(t, args.eps0, args.dataset)
     fig_qffl(t, args.eps0)
-    fig_mia(t)
+    fig_qffl_L(t, args.eps0)
+    fig_mia(t, conv, conv_rounds)
+    fig_convergence()
     print("tables:")
     table_main(t, args.eps0)
     table_adult(t_all, args.eps0)

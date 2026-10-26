@@ -10,7 +10,8 @@ training, DP-FedAvg and the q-FFL fairness objective — with every client answe
 method ends at the **same (ε, δ)**.
 
 ## Results in brief
-CIFAR-10, 20 clients (Dirichlet α = 0.3), per-example DP-SGD, mean over 3 seeds (147 runs, 0 failed). At ε = 2:
+CIFAR-10, 20 clients (Dirichlet α = 0.3), per-example DP-SGD, mean over 3 seeds (207 runs, 0 failed: 147 main runs
+plus 60 runs for longer non-private training and the q-FFL constant). At ε = 2:
 
 | Mechanism | Mean acc. (%) | Worst-10% acc. (%) | Jain | Gain vs DP-FedAvg (pts) | Total MB |
 |---|---|---|---|---|---|
@@ -21,12 +22,17 @@ CIFAR-10, 20 clients (Dirichlet α = 0.3), per-example DP-SGD, mean over 3 seeds
 | Clustered (IFCA) | 42.8 ± 2.7 | 24.0 ± 5.3 | 0.940 | +15.6 | 1809 |
 | FedPer | 54.1 ± 0.4 | 38.1 ± 0.8 | 0.959 | +26.8 | 896 |
 
-- DP hits the weakest clients hardest: from no DP to ε = 2, DP-FedAvg loses 13.1 pts of mean but 18.3 pts of worst-10% accuracy.
-- FedPer improves every client in every seed; local-only training has the highest mean under DP.
+- DP hits the weakest clients hardest: against non-private FedAvg trained for 200 rounds (59.8% mean, 47.3% worst-10%),
+  ε = 2 costs at least 32.5 pts of mean and 35.2 pts of worst-10% accuracy (54% vs 74% of their value).
+- Without DP, federation helps (200 rounds: FedPer 76.4% vs local-only 71.3%); under DP it does not: local-only training
+  has the highest mean at every private budget. FedPer is the best federated option and improves every client in every seed.
 - Below ε = 1, fine-tuning and Per-FedAvg lose the least accuracy per unit ε and keep the worst clients highest.
-- q-FFL stalls under DP (12.5% mean accuracy at ε = 2). Membership-inference AUC stays at 0.500–0.509 for all private runs.
+- q-FFL does not lift the weakest clients: with the default constant L = 1/η it stalls under DP (12.5% mean at ε = 2);
+  a smaller L (0.01/η) recovers 23.4%, but its worst-10% accuracy stays below DP-FedAvg's at every L tested.
+- Membership-inference AUC stays at 0.500–0.509 for all private runs; without DP (200 rounds) it reaches 0.660 for local-only.
 
-Source: `results/summary_table.csv` (all metrics), `results/recommended.csv`, `results/eps_slopes.csv`; details in the paper.
+Source: `results/summary_table.csv` (all metrics, main protocol), `results/summary_converged.csv` (200-round non-private
+runs), `results/curves_nonprivate.csv`, `results/recommended.csv`, `results/eps_slopes.csv`; details in the paper.
 
 ## What is measured
 | Group | Metrics |

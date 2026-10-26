@@ -1,0 +1,416 @@
+{
+ "status": "ok",
+ "config": {
+  "dataset": "adult",
+  "data_dir": "data",
+  "num_clients": 20,
+  "dirichlet_alpha": 0.3,
+  "min_client_size": 300,
+  "adult_min_rows": 500,
+  "split": [
+   0.7,
+   0.1,
+   0.2
+  ],
+  "partition_seed": 42,
+  "max_examples": null,
+  "model": "mlp",
+  "method": "perfedavg",
+  "aggregation": "mean",
+  "qffl_q": 0.0,
+  "qffl_L_scale": 1.0,
+  "ft_branch": true,
+  "ft_fraction": 0.1,
+  "rounds": 100,
+  "local_steps": 10,
+  "lr_local": 0.1,
+  "lr_server": 1.0,
+  "perfedavg_alpha": 0.03,
+  "perfedavg_beta": 0.05,
+  "perfedavg_adapt_steps": 5,
+  "ifca_k": 3,
+  "epsilon": null,
+  "delta": 1e-05,
+  "sample_rate": 0.03,
+  "clip_norm": 1.0,
+  "loss_noise_ratio": 30.0,
+  "loss_clip": 3.0,
+  "grad_backend": "opacus",
+  "max_physical_batch": 128,
+  "eval_every": 10,
+  "mia": true,
+  "seed": 2,
+  "device": "auto",
+  "run_id": "adult__perfedavg-R100__epsinf__s2",
+  "blocks": [
+   "Q10"
+  ]
+ },
+ "privacy": {
+  "private": false,
+  "epsilon_target": null,
+  "epsilon_spent": null,
+  "delta": 1e-05,
+  "sigma": 0.0,
+  "sigma_loss": 0.0,
+  "sample_rate": 0.03,
+  "clip_norm": 1.0,
+  "grad_queries_per_client": 1005,
+  "loss_queries_per_client": 0,
+  "observed_queries_per_client": [
+   [
+    1005,
+    0
+   ]
+  ]
+ },
+ "data": {
+  "dataset": "adult",
+  "n_total": 44976,
+  "num_features": 33,
+  "input_shape": [
+   33
+  ],
+  "num_classes": 2,
+  "num_clients": 12,
+  "clients": [
+   {
+    "name": "Craft-repair",
+    "n": 6020,
+    "n_train": 4214,
+    "n_val": 602,
+    "n_test": 1204,
+    "class_hist": [
+     4665,
+     1355
+    ],
+    "female_frac": 0.05232558139534882,
+    "positive_rate": 0.22508305647840532
+   },
+   {
+    "name": "Prof-specialty",
+    "n": 6008,
+    "n_train": 4206,
+    "n_val": 601,
+    "n_test": 1201,
+    "class_hist": [
+     3304,
+     2704
+    ],
+    "female_frac": 0.3666777629826897,
+    "positive_rate": 0.45006657789613846
+   },
+   {
+    "name": "Exec-managerial",
+    "n": 5984,
+    "n_train": 4189,
+    "n_val": 598,
+    "n_test": 1197,
+    "class_hist": [
+     3117,
+     2867
+    ],
+    "female_frac": 0.28810160427807485,
+    "positive_rate": 0.47911096256684493
+   },
+   {
+    "name": "Adm-clerical",
+    "n": 5540,
+    "n_train": 3878,
+    "n_val": 554,
+    "n_test": 1108,
+    "class_hist": [
+     4784,
+     756
+    ],
+    "female_frac": 0.6732851985559567,
+    "positive_rate": 0.13646209386281588
+   },
+   {
+    "name": "Sales",
+    "n": 5408,
+    "n_train": 3786,
+    "n_val": 541,
+    "n_test": 1081,
+    "class_hist": [
+     3953,
+     1455
+    ],
+    "female_frac": 0.35521449704142016,
+    "positive_rate": 0.26904585798816566
+   },
+   {
+    "name": "Other-service",
+    "n": 4808,
+    "n_train": 3366,
+    "n_val": 481,
+    "n_test": 961,
+    "class_hist": [
+     4612,
+     196
+    ],
+    "female_frac": 0.5495008319467554,
+    "positive_rate": 0.04076539101497504
+   },
+   {
+    "name": "Machine-op-inspct",
+    "n": 2970,
+    "n_train": 2079,
+    "n_val": 297,
+    "n_test": 594,
+    "class_hist": [
+     2605,
+     365
+    ],
+    "female_frac": 0.267003367003367,
+    "positive_rate": 0.12289562289562289
+   },
+   {
+    "name": "Transport-moving",
+    "n": 2316,
+    "n_train": 1621,
+    "n_val": 232,
+    "n_test": 463,
+    "class_hist": [
+     1838,
+     478
+    ],
+    "female_frac": 0.05397236614853196,
+    "positive_rate": 0.20639032815198619
+   },
+   {
+    "name": "Handlers-cleaners",
+    "n": 2046,
+    "n_train": 1432,
+    "n_val": 205,
+    "n_test": 409,
+    "class_hist": [
+     1911,
+     135
+    ],
+    "female_frac": 0.12365591397849462,
+    "positive_rate": 0.06598240469208211
+   },
+   {
+    "name": "Farming-fishing",
+    "n": 1480,
+    "n_train": 1036,
+    "n_val": 148,
+    "n_test": 296,
+    "class_hist": [
+     1308,
+     172
+    ],
+    "female_frac": 0.06418918918918914,
+    "positive_rate": 0.11621621621621622
+   },
+   {
+    "name": "Tech-support",
+    "n": 1420,
+    "n_train": 994,
+    "n_val": 142,
+    "n_test": 284,
+    "class_hist": [
+     1009,
+     411
+    ],
+    "female_frac": 0.39014084507042257,
+    "positive_rate": 0.28943661971830986
+   },
+   {
+    "name": "Protective-serv",
+    "n": 976,
+    "n_train": 683,
+    "n_val": 98,
+    "n_test": 195,
+    "class_hist": [
+     669,
+     307
+    ],
+    "female_frac": 0.125,
+    "positive_rate": 0.3145491803278688
+   }
+  ]
+ },
+ "model": {
+  "name": "mlp",
+  "params": 4322,
+  "head_params": 66
+ },
+ "views": {
+  "perfedavg": {
+   "acc_test": [
+    0.8031561374664307,
+    0.7960033416748047,
+    0.773600697517395,
+    0.8944043517112732,
+    0.8186864256858826,
+    0.9542143940925598,
+    0.9023568630218506,
+    0.779697597026825,
+    0.9413203597068787,
+    0.8716216683387756,
+    0.76408451795578,
+    0.7794871926307678
+   ],
+   "summary": {
+    "mean": 0.8398861289024353,
+    "worst10": 0.7688426077365875,
+    "std": 0.06606586442934838,
+    "var": 0.00436469844279704,
+    "jain": 0.9938505748541525,
+    "min": 0.76408451795578,
+    "max": 0.9542143940925598,
+    "k": 12
+   },
+   "comm": {
+    "kind": "full",
+    "rounds": 100,
+    "params_down_per_client": 4322,
+    "params_up_per_client": 4322,
+    "bytes_down_per_round": 207456,
+    "bytes_up_per_round": 207456,
+    "MB_per_round": 0.414912,
+    "total_MB": 41.4912
+   },
+   "mia": {
+    "auc_mean": 0.5009433900316557,
+    "acc_mean": 0.5015194452987416,
+    "adv_mean": 0.00303889059748332,
+    "auc": [
+     0.4878354072570801,
+     0.47765427827835083,
+     0.4970631003379822,
+     0.49256637692451477,
+     0.5069551467895508,
+     0.47772926092147827,
+     0.46077921986579895,
+     0.5265920162200928,
+     0.517835259437561,
+     0.5177136659622192,
+     0.5673477649688721,
+     0.4812491834163666
+    ]
+   },
+   "group": {
+    "pooled": {
+     "dp_gap": 0.20194347764301457,
+     "eo_gap": 0.15865192209796347
+    },
+    "per_client": [
+     {
+      "dp_gap": 0.09067982456140351,
+      "eo_gap": NaN
+     },
+     {
+      "dp_gap": 0.4205919245012544,
+      "eo_gap": 0.271944510882564
+     },
+     {
+      "dp_gap": 0.444323210280657,
+      "eo_gap": 0.31209090909090914
+     },
+     {
+      "dp_gap": 0.17801756698709878,
+      "eo_gap": 0.27597402597402604
+     },
+     {
+      "dp_gap": 0.2779718948874882,
+      "eo_gap": 0.3165584415584416
+     },
+     {
+      "dp_gap": 0.03093886501494332,
+      "eo_gap": 0.19999999999999998
+     },
+     {
+      "dp_gap": 0.07878872258962756,
+      "eo_gap": NaN
+     },
+     {
+      "dp_gap": 0.0722285497342445,
+      "eo_gap": NaN
+     },
+     {
+      "dp_gap": 0.05042016806722689,
+      "eo_gap": NaN
+     },
+     {
+      "dp_gap": 0.0931899641577061,
+      "eo_gap": NaN
+     },
+     {
+      "dp_gap": 0.23510705957176173,
+      "eo_gap": 0.009049773755656076
+     },
+     {
+      "dp_gap": 0.12570145903479235,
+      "eo_gap": 0.09999999999999998
+     }
+    ],
+    "dp_gap_mean": 0.1748299341156837,
+    "eo_gap_mean": 0.21223109446594238
+   }
+  }
+ },
+ "curves": {
+  "round": [
+   10,
+   20,
+   30,
+   40,
+   50,
+   60,
+   70,
+   80,
+   90,
+   100
+  ],
+  "val_mean": [
+   0.7804600745439529,
+   0.7805987348159155,
+   0.8341234028339386,
+   0.8407624363899231,
+   0.8399374534686407,
+   0.8402215093374252,
+   0.8411781191825867,
+   0.8406617840131124,
+   0.8412315547466278,
+   0.8418831924597422
+  ],
+  "val_worst10": [
+   0.5420800745487213,
+   0.5429120361804962,
+   0.7322856485843658,
+   0.7723067402839661,
+   0.7773109376430511,
+   0.781487375497818,
+   0.7765510678291321,
+   0.7831429243087769,
+   0.7839983105659485,
+   0.781653106212616
+  ]
+ },
+ "cost": {
+  "time_total_s": 29.65791999999783,
+  "time_train_s": 29.135627500218106,
+  "time_per_round_s": 0.2913562750021811,
+  "rounds": 100,
+  "peak_gpu_MB": 25.0859375,
+  "device": "cuda"
+ },
+ "versions": {
+  "python": "3.12.10",
+  "platform": "Windows-11-10.0.26300-SP0",
+  "torch": "2.11.0+cu128",
+  "cuda_available": true,
+  "cuda_version": "12.8",
+  "numpy": "2.5.2",
+  "opacus": "1.6.0",
+  "flwr": "1.41.0",
+  "gpu": "NVIDIA GeForce GTX 1650"
+ },
+ "run_id": "adult__perfedavg-R100__epsinf__s2",
+ "blocks": [
+  "Q10"
+ ]
+}
