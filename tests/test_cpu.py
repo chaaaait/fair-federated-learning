@@ -151,6 +151,7 @@ def test_run_ids_and_auto_lambda():
     assert lo({"method": "fedper", "dirichlet_alpha": 1.0}) == "fedper-a1"
     assert lo({"method": "fedavg", "rounds": 200}) == "fedavg-R200"
     assert lo({"method": "fedavg", "clip_only": True}) == "fedavg-clip"
+    assert lo({"method": "fedper", "clip_norm": 8}) == "fedper-C8"
     assert lo({"method": "local", "lr_local": 0.025}) == "local-lr0.025"
     assert lo({"method": "perfedavg", "perfedavg_meta_steps": 20}) == "perfedavg-ms20"
     assert lo({"method": "ifca", "ifca_k": 2}) == "ifca-k2"

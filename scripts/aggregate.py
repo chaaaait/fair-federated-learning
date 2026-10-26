@@ -9,7 +9,7 @@ Outputs (results/):
   recommended.csv         problem statement Eq. (5): per epsilon, the mechanism with the largest mean
                           personalisation gain whose Jain index is >= DP-FedAvg's (the fairness floor J0)
   summary_runs_aux.csv    runs outside the main protocol, tagged by `variant`: R200 = 200 rounds, clip = clipping
-  summary_aux.csv         only, lr0.1 = local learning rate, ms20 = Per-FedAvg meta-steps, k2 = IFCA clusters,
+  summary_aux.csv         only, C8 = clipping norm 8, lr0.1 = local learning rate, ms20 = Per-FedAvg meta-steps, k2 = IFCA clusters,
                           lam1 = an MR-MTL lambda that validation did not pick; and their mean/SD over seeds
   summary_converged.csv   the runs that differ from the main protocol only in their round count
   curves.csv              validation curves of every run (curves_nonprivate.csv: the non-private ones without clipping)
@@ -41,7 +41,7 @@ METRICS = ["mean", "worst10", "std", "var", "jain", "min", "gain_mean", "gain_wo
            "time_total_s", "peak_gpu_MB", "dp_gap", "eo_gap", "dp_gap_mean", "eo_gap_mean",
            "eps_spent", "sigma", "val_final"]
 # variant parts that change the training protocol itself; gains are then measured against DP-FedAvg run the same way
-PROTOCOL_PARTS = ("R", "clip", "lr")
+PROTOCOL_PARTS = ("R", "clip", "C", "lr")
 
 
 def eps_value(e):
@@ -71,6 +71,8 @@ def variant_of(cfg: dict) -> str:
         parts.append(f"R{int(cfg['rounds'])}")
     if cfg.get("clip_only"):
         parts.append("clip")
+    if float(cfg["clip_norm"]) != float(d["clip_norm"]):
+        parts.append(f"C{float(cfg['clip_norm']):g}")
     if float(cfg["lr_local"]) != float(d["lr_local"]):
         parts.append(f"lr{float(cfg['lr_local']):g}")
     if cfg["method"] == "perfedavg" and cfg.get("perfedavg_meta_steps"):

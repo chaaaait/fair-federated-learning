@@ -121,6 +121,14 @@ blocks:
       - {method: local, rounds: 80}
       - {method: fedper, rounds: 80}
 
+  - name: Q13b           # clipping norm C = 8 (Liu et al.'s value for CIFAR-10) under DP: does federation still lose?
+    dataset: cifar10
+    eps: [eps0]
+    runs:
+      - {method: fedavg, clip_norm: 8}
+      - {method: local, clip_norm: 8}
+      - {method: fedper, clip_norm: 8}
+
   - name: Q14            # cost of DP, step 3: 200 private rounds, seed 0 (seeds 1-2 are the last block)
     dataset: cifar10
     eps: [eps0]

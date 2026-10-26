@@ -52,6 +52,8 @@ def label_of(run: dict) -> str:
         label += f"-R{int(run['rounds'])}"
     if run.get("clip_only"):
         label += "-clip"
+    if "clip_norm" in run:
+        label += f"-C{float(run['clip_norm']):g}"
     if "lr_local" in run:
         label += f"-lr{float(run['lr_local']):g}"
     if "perfedavg_meta_steps" in run:
