@@ -2,7 +2,7 @@
 
   .venv\\Scripts\\python scripts\\figures.py [--eps0 2]
 
-Writes paper/figures/*.pdf (vector, for LaTeX) + *.png (300 dpi, for slides) and paper/tables/*.tex.
+Writes paper/figures/*.pdf (vector, for LaTeX) + *.png (300 dpi, for slides) and results/tables/*.tex.
 Any figure whose data is missing is skipped with a note, so this also works on partial results.
 
 Style: one fixed colour + marker per configuration (colour follows the entity, never its rank),
@@ -28,7 +28,7 @@ from _common import RESULTS, ROOT  # noqa: E402
 
 PAPER_OUT = Path(os.environ.get("PFL_PAPER_OUT", ROOT / "paper"))  # override for tests
 FIG = PAPER_OUT / "figures"
-TAB = PAPER_OUT / "tables"
+TAB = RESULTS / "tables"  # LaTeX versions of the paper tables
 
 # configuration -> (label, colour, marker). Order = legend order.
 STYLE = {

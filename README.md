@@ -59,7 +59,7 @@ Exact versions: `requirements-lock.txt` and `env.txt`. Linux/macOS: use `.venv/b
 .venv\Scripts\python scripts\sweep.py           # all experiments in configs\queue.yaml (resumable)
 .venv\Scripts\python scripts\status.py          # progress + ETA
 .venv\Scripts\python scripts\aggregate.py       # results\summary_*.csv, eps_slopes.csv, recommended.csv, sanity.txt
-.venv\Scripts\python scripts\figures.py         # paper\figures\*.pdf|png, paper\tables\*.tex
+.venv\Scripts\python scripts\figures.py         # paper\figures\*.pdf|png, results\tables\*.tex
 ```
 One run: `.venv\Scripts\python scripts\run.py --method fedper --eps 2 --seed 0`
 
@@ -69,8 +69,8 @@ re-running the sweep:
 | Paper item | File | Command |
 |---|---|---|
 | Fig. 1 system diagram | `paper/figures/architecture.*` | `scripts\architecture.py` |
-| Dataset table, partition plots | `paper/tables/datasets.tex`, `paper/figures/partition_*` | `scripts\dataset_stats.py` |
-| All result figures (M1–M3, MIA) and Tables main / Adult / cost / recommended | `paper/figures/m*`, `privacy_mia_vs_eps`, `paper/tables/*.tex` | `scripts\aggregate.py` then `scripts\figures.py` |
+| Dataset table, partition plots | `results/tables/datasets.tex`, `paper/figures/partition_*` | `scripts\dataset_stats.py` |
+| All result figures (M1–M3, MIA) and Tables main / Adult / cost / recommended | `paper/figures/m*`, `privacy_mia_vs_eps`, `results/tables/*.tex` | `scripts\aggregate.py` then `scripts\figures.py` |
 
 If the CIFAR-10 download fails with `CERTIFICATE_VERIFY_FAILED` (seen with Python's SSL store on Windows), fetch the
 archive with the system `curl` instead; torchvision checks its md5 and extracts it on the next run:
@@ -92,7 +92,13 @@ GroupNorm CNN (~0.14 M parameters) — BatchNorm would break per-example DP.
 See `demo/README.md`.
 
 ## Layout
-`pfl/` library · `configs/` · `scripts/` · `tests/` · `demo/` · `paper/` (IEEE LaTeX) · `results/runs/` (one JSON per run)
+`pfl/` library · `configs/` · `scripts/` · `tests/` · `demo/` · `paper/` (figures + `refs.bib`; the manuscript itself is a Word file, not in the repo) · `results/runs/` (one JSON per run)
+
+## Use of generative AI
+Claude (Anthropic) was used to help write and test the experiment code and figure scripts, run and aggregate
+the experiment sweep, make the figures, and draft and edit parts of the paper. The authors designed the study,
+checked every reported number against the run files in `results/`, verified the references, and take full
+responsibility for the work.
 
 ## Licence
 Code: MIT. CIFAR-10: free research use with citation (Krizhevsky, 2009). Adult: UCI ML Repository, CC BY 4.0.

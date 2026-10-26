@@ -3,7 +3,7 @@
   .venv\\Scripts\\python scripts\\dataset_stats.py            # CIFAR-10 + Adult (downloads on first run)
   .venv\\Scripts\\python scripts\\dataset_stats.py --dataset synthetic
 
-Writes results/dataset_stats.json, paper/tables/datasets.tex and paper/figures/partition_<dataset>.pdf/png
+Writes results/dataset_stats.json, results/tables/datasets.tex and paper/figures/partition_<dataset>.pdf/png
 (stacked bar per client: how many examples of each class -> shows the label skew).
 """
 from __future__ import annotations
@@ -112,10 +112,10 @@ def main():
     colspec = "p{2.3cm}" + "p{2.6cm}" * len(names)
     tex = (r"\begin{tabular}{" + colspec + "}\n\\toprule\n" + head + "\n\\midrule\n"
            + "\n".join(rows) + "\n\\bottomrule\n\\end{tabular}\n")
-    tab = PAPER_OUT / "tables"
+    tab = RESULTS / "tables"
     tab.mkdir(parents=True, exist_ok=True)
     (tab / "datasets.tex").write_text(tex, encoding="utf-8")
-    print("wrote results/dataset_stats.json, paper/tables/datasets.tex, paper/figures/partition_*.pdf")
+    print("wrote results/dataset_stats.json, results/tables/datasets.tex, paper/figures/partition_*.pdf")
 
 
 if __name__ == "__main__":

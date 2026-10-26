@@ -291,7 +291,7 @@ def write_decomposition(df_all: pd.DataFrame, eps0: float) -> None:
             if (np.isinf(d.eps) & d.variant.str.fullmatch(r"R\d+")).any() else None
         stages = {"nodp_long": (math.inf, f"R{long_R}" if long_R else None, False),
                   "nodp": (math.inf, "", True), "clip": (math.inf, "clip", False), "dp": (eps0, "", True),
-                  "dp_R80": (eps0, "R80", False), "dp_R200": (eps0, "R200", False)}
+                  "dp_R80": (eps0, "R80", False), "dp_R200": (eps0, "R200", False), "dp_C8": (eps0, "C8", False)}
         for view in ("fedavg", "finetune", "local", "fedper", "perfedavg", "ifca"):
             for metric in ("mean", "worst10", "jain", "dp_gap", "eo_gap"):
                 if metric in ("dp_gap", "eo_gap") and d[metric].isna().all():
@@ -311,6 +311,7 @@ def write_decomposition(df_all: pd.DataFrame, eps0: float) -> None:
                             "noise": g("clip") - g("dp"), "total_vs_long": g("nodp_long") - g("dp"),
                             "total_equal_rounds": g("nodp") - g("dp"),
                             "dp_more_rounds_R80": g("dp_R80") - g("dp"), "dp_more_rounds_R200": g("dp_R200") - g("dp"),
+                            "dp_clip8_vs_clip1": g("dp_C8") - g("dp"),
                             "cost_at_R200": g("nodp_long") - g("dp_R200") if long_R == 200 else np.nan})
                 rows.append(row)
     pd.DataFrame(rows).to_csv(RESULTS / "cost_decomposition.csv", index=False)
