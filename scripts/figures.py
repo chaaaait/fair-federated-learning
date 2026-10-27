@@ -196,7 +196,7 @@ def fig_m2_sweep(t, conv=None, conv_rounds=None):
     if conv_rounds:
         h, lab = conv_handle(conv_rounds)
         handles, labels = handles + [h], labels + [lab]
-    fig.legend(handles, labels, loc="outside upper center", ncol=7, frameon=False)
+    fig.legend(handles, labels, loc="outside upper center", ncol=4, frameon=False)
     save(fig, "m2_accuracy_vs_eps_all")
 
 

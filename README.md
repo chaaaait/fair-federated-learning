@@ -10,29 +10,29 @@ training, DP-FedAvg and the q-FFL fairness objective — with every client answe
 method ends at the **same (ε, δ)**.
 
 ## Results in brief
-CIFAR-10, 20 clients (Dirichlet α = 0.3), per-example DP-SGD, mean over 3 seeds (207 runs, 0 failed: 147 main runs
-plus 60 runs for longer non-private training and the q-FFL constant). At ε = 2:
+CIFAR-10, 20 clients (Dirichlet α = 0.3), per-example DP-SGD. 392 runs, 0 failed, 251 private runs all within budget,
+47.2 GPU hours (GTX 1650). At ε = 2 (mean ± SD over five seeds):
 
 | Mechanism | Mean acc. (%) | Worst-10% acc. (%) | Jain | Gain vs DP-FedAvg (pts) | Total MB |
 |---|---|---|---|---|---|
-| DP-FedAvg (global) | 27.2 ± 1.7 | 12.1 ± 6.2 | 0.865 | — | 905 |
-| Fine-tuning | 51.8 ± 0.9 | 36.2 ± 2.0 | 0.950 | +24.6 | 814 |
-| Local only | 56.2 ± 0.6 | 38.1 ± 1.4 | 0.960 | +29.0 | 0 |
-| Per-FedAvg | 49.9 ± 0.8 | 32.8 ± 2.1 | 0.942 | +22.7 | 905 |
-| Clustered (IFCA) | 42.8 ± 2.7 | 24.0 ± 5.3 | 0.940 | +15.6 | 1809 |
-| FedPer | 54.1 ± 0.4 | 38.1 ± 0.8 | 0.959 | +26.8 | 896 |
+| DP-FedAvg (global) | 27.8 ± 1.6 | 12.5 ± 4.5 | 0.875 | — | 905 |
+| Fine-tuning | 51.9 ± 0.6 | 36.2 ± 1.5 | 0.951 | +24.0 | 814 |
+| Local only | 56.0 ± 0.5 | 37.9 ± 1.3 | 0.960 | +28.2 | 0 |
+| Per-FedAvg | 49.7 ± 1.1 | 32.1 ± 3.1 | 0.939 | +21.9 | 905 |
+| Clustered (IFCA) | 43.5 ± 2.2 | 26.3 ± 5.0 | 0.945 | +15.7 | 1809 |
+| FedPer | 53.6 ± 0.9 | 37.4 ± 1.4 | 0.956 | +25.7 | 896 |
+| MR-MTL (λ on validation) | 55.7 ± 0.5 | 37.9 ± 1.3 | 0.959 | +27.9 | 905 |
 
-- DP hits the weakest clients hardest: against non-private FedAvg trained for 200 rounds (59.8% mean, 47.3% worst-10%),
-  ε = 2 costs at least 32.5 pts of mean and 35.2 pts of worst-10% accuracy (54% vs 74% of their value).
-- Without DP, federation helps (200 rounds: FedPer 76.4% vs local-only 71.3%); under DP it does not: local-only training
-  has the highest mean at every private budget. FedPer is the best federated option and improves every client in every seed.
+- **Cost of DP, in steps** (FedAvg, seeds 0–2): 200 → 40 non-private rounds costs 19.5 pts of mean accuracy, clipping
+  to C = 1 without noise a further 10.9, the noise at ε = 2 only 2.1. With the same 200 rounds, ε = 2 still costs 26.2 pts
+  (mean) and 28.1 pts (worst-10%). Clipping costs local-only training 2.2 pts and FedPer 7.2.
+- **DP removes the benefit of federation under strong label skew:** without DP FedPer beats local-only training (76.4% vs
+  71.3%, 200 rounds); under DP local-only training is ahead at every budget (paired difference at ε = 2: +2.4 pts, 95% CI
+  1.6–3.2, all five seeds), also with 80/200 private rounds, C = 8 and the learning rate picked on validation. MR-MTL
+  (Liu et al. 2022) picks almost no federation (λ = 0.01). With milder skew (α = 1.0) FedPer keeps a small lead (40.4% vs 39.1%).
 - Below ε = 1, fine-tuning and Per-FedAvg lose the least accuracy per unit ε and keep the worst clients highest.
-- q-FFL does not lift the weakest clients: with the default constant L = 1/η it stalls under DP (12.5% mean at ε = 2);
-  a smaller L (0.01/η) recovers 23.4%, but its worst-10% accuracy stays below DP-FedAvg's at every L tested.
-- Membership-inference AUC stays at 0.500–0.509 for all private runs; without DP (200 rounds) it reaches 0.660 for local-only.
-
-Source: `results/summary_table.csv` (all metrics, main protocol), `results/summary_converged.csv` (200-round non-private
-runs), `results/curves_nonprivate.csv`, `results/recommended.csv`, `results/eps_slopes.csv`; details in the paper.
+- q-FFL does not lift the weakest clients at any constant L (best: L = 0.01/η, 22.8% mean at ε = 2, worst-10% 1.5%).
+- Membership-inference AUC stays at 0.499–0.509 for all private runs; without DP (200 rounds) it reaches 0.660 for local-only.
 
 ## What is measured
 | Group | Metrics |
@@ -66,11 +66,26 @@ One run: `.venv\Scripts\python scripts\run.py --method fedper --eps 2 --seed 0`
 Every figure and table comes from the committed run files in `results\runs\`, so you can rebuild them without
 re-running the sweep:
 
-| Paper item | File | Command |
-|---|---|---|
-| Fig. 1 system diagram | `paper/figures/architecture.*` | `scripts\architecture.py` |
-| Dataset table, partition plots | `results/tables/datasets.tex`, `paper/figures/partition_*` | `scripts\dataset_stats.py` |
-| All result figures (M1–M3, MIA) and Tables main / Adult / cost / recommended | `paper/figures/m*`, `privacy_mia_vs_eps`, `results/tables/*.tex` | `scripts\aggregate.py` then `scripts\figures.py` |
+| Paper item | File(s) | Script | Data |
+|---|---|---|---|
+| Fig. 1 partition, Table 2 datasets | `paper/figures/partition_*`, `results/tables/datasets.tex` | `scripts\dataset_stats.py` | `results/dataset_stats.json` |
+| Fig. 2 system diagram | `paper/figures/architecture.*` | `scripts\architecture.py` | — |
+| Fig. 3 non-private convergence | `nonprivate_convergence` | `scripts\figures.py` | `results/curves_nonprivate.csv` |
+| Figs. 4–5 DP-FedAvg / fine-tuning vs ε | `m1_accuracy_vs_eps`, `m1_fairness_vs_eps` | `scripts\figures.py` | `results/summary_table.csv`, `summary_converged.csv` |
+| Fig. 6 cost of DP in steps | `cost_of_dp_steps` | `scripts\figures.py` | `results/cost_decomposition.csv` |
+| Figs. 7–9 mechanisms at ε₀, per-client gain, sweep | `m2_*` | `scripts\figures.py` | `results/summary_table.csv`, `summary_runs.csv` |
+| Figs. 10–11 q-FFL | `m3_qffl_tradeoff`, `m3_qffl_L_sweep` | `scripts\figures.py` | `results/summary_table.csv` |
+| Fig. 12 membership inference | `privacy_mia_vs_eps` | `scripts\figures.py` | `results/summary_table.csv` |
+| Fig. 13 MR-MTL vs λ | `mrmtl_lambda` | `scripts\figures.py` | `results/mrmtl_lambda.csv` |
+| Table 5 200-round reference | — | `scripts\aggregate.py` | `results/summary_converged.csv` |
+| Table 6 main results, paired CIs | `results/tables/main_results.tex` | `scripts\aggregate.py` | `results/summary_table.csv`, `paired_eps0.csv` |
+| Table 7 Adult | `results/tables/adult_group_fairness.tex` | `scripts\aggregate.py` | `results/summary_table.csv`, `summary_converged.csv` |
+| Table 8 cost | `results/tables/cost.tex` | `scripts\aggregate.py` | `results/summary_table.csv` |
+| Table 9 robustness checks | — | `scripts\aggregate.py` | `results/summary_aux.csv`, `lr_check.csv` |
+| Table 10 recommendations | `results/tables/recommended.tex` | `scripts\aggregate.py` | `results/recommended.csv` |
+| FedPer + q-FFL explanation (§4.5) | — | `scripts\diag_fedper_qffl.py` | `results/diag_fedper_qffl.csv` |
+
+Figures are written to `paper/figures/` as PDF and PNG. Run counts, budget checks and GPU hours: `results/sanity.txt`.
 
 If the CIFAR-10 download fails with `CERTIFICATE_VERIFY_FAILED` (seen with Python's SSL store on Windows), fetch the
 archive with the system `curl` instead; torchvision checks its md5 and extracts it on the next run:

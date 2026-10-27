@@ -284,6 +284,7 @@ def write_decomposition(df_all: pd.DataFrame, eps0: float) -> None:
     for ds in sorted(df_all.dataset.unique()):
         alpha = float(defaults(ds)["dirichlet_alpha"])
         d = df_all[(df_all.dataset == ds) & (df_all.alpha == alpha)]
+        d = d[d.seed.isin([0, 1, 2])]  # every stage on the same seeds (seeds 3-4 exist only for the main eps0 runs)
         if d.empty:
             continue
         R = default_rounds(ds)
