@@ -109,11 +109,6 @@ See `demo/README.md`.
 ## Layout
 `pfl/` library · `configs/` · `scripts/` · `tests/` · `demo/` · `paper/` (figures + `refs.bib`; the manuscript itself is a Word file, not in the repo) · `results/runs/` (one JSON per run)
 
-## Use of generative AI
-Claude (Anthropic) was used to help write and test the experiment code and figure scripts, run and aggregate
-the experiment sweep, make the figures, and draft and edit parts of the paper. The authors designed the study,
-checked every reported number against the run files in `results/`, verified the references, and take full
-responsibility for the work.
 
 ## Licence
 Code: MIT. CIFAR-10: free research use with citation (Krizhevsky, 2009). Adult: UCI ML Repository, CC BY 4.0.
