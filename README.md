@@ -68,15 +68,15 @@ re-running the sweep:
 
 | Paper item | File(s) | Script | Data |
 |---|---|---|---|
-| Fig. 1 partition (Appendix A) | `paper/figures/partition_*` | `scripts\dataset_stats.py` | `results/dataset_stats.json` |
-| Fig. 2 system diagram | `paper/figures/architecture.*` | `scripts\architecture.py` | — |
-| Fig. 3 non-private convergence | `nonprivate_convergence` | `scripts\figures.py` | `results/curves_nonprivate.csv` |
-| Fig. 4 DP-FedAvg / fine-tuning vs ε | `m1_accuracy_vs_eps` | `scripts\figures.py` | `results/summary_table.csv`, `summary_converged.csv` |
-| Fig. 5 cost of DP in steps | `cost_of_dp_steps` | `scripts\figures.py` | `results/cost_decomposition.csv` |
-| Figs. 6–7 mechanisms at ε₀, privacy sweep | `m2_mechanisms_at_eps0`, `m2_accuracy_vs_eps_all` | `scripts\figures.py` | `results/summary_table.csv` |
-| Fig. 8 q-FFL vs constant L | `m3_qffl_L_sweep` | `scripts\figures.py` | `results/summary_table.csv` |
-| Fig. 9 membership inference (Appendix A) | `privacy_mia_vs_eps` | `scripts\figures.py` | `results/summary_table.csv` |
-| Fig. 10 MR-MTL vs λ (Appendix A) | `mrmtl_lambda` | `scripts\figures.py` | `results/mrmtl_lambda.csv` |
+| Fig. A1 partition | `paper/figures/partition_*` | `scripts\dataset_stats.py` | `results/dataset_stats.json` |
+| Fig. 1 system diagram | `paper/figures/architecture.*` | `scripts\architecture.py` | — |
+| Fig. 2 non-private convergence | `nonprivate_convergence` | `scripts\figures.py` | `results/curves_nonprivate.csv` |
+| Fig. 3 DP-FedAvg / fine-tuning vs ε | `m1_accuracy_vs_eps` | `scripts\figures.py` | `results/summary_table.csv`, `summary_converged.csv` |
+| Fig. 4 cost of DP in steps | `cost_of_dp_steps` | `scripts\figures.py` | `results/cost_decomposition.csv` |
+| Figs. 5–6 mechanisms at ε₀, privacy sweep | `m2_mechanisms_at_eps0`, `m2_accuracy_vs_eps_all` | `scripts\figures.py` | `results/summary_table.csv` |
+| Fig. 7 q-FFL vs constant L | `m3_qffl_L_sweep` | `scripts\figures.py` | `results/summary_table.csv` |
+| Fig. A2 membership inference | `privacy_mia_vs_eps` | `scripts\figures.py` | `results/summary_table.csv` |
+| Fig. A3 MR-MTL vs λ | `mrmtl_lambda` | `scripts\figures.py` | `results/mrmtl_lambda.csv` |
 | Table 4 200-round reference | — | `scripts\aggregate.py` | `results/summary_converged.csv` |
 | Table 5 main results, paired CIs | `results/tables/main_results.tex` | `scripts\aggregate.py` | `results/summary_table.csv`, `paired_eps0.csv` |
 | Table 6 Adult | `results/tables/adult_group_fairness.tex` | `scripts\aggregate.py` | `results/summary_table.csv`, `summary_converged.csv` |
